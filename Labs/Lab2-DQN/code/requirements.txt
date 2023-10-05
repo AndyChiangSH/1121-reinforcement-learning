@@ -1,0 +1,6 @@
+gym==0.26.2
+numpy==1.25.2
+torch==2.0.1
+tensorboard==2.14.0
+opencv-python==4.8.0.76
+moviepy==1.0.3
