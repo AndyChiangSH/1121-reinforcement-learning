@@ -6,25 +6,30 @@ import torch.nn.functional as F
 class AtariNetDQN(nn.Module):
     def __init__(self, num_classes=4, init_weights=True):
         super(AtariNetDQN, self).__init__()
-        self.cnn = nn.Sequential(nn.Conv2d(4, 32, kernel_size=8, stride=4),
-                                        nn.ReLU(True),
-                                        nn.Conv2d(32, 64, kernel_size=4, stride=2),
-                                        nn.ReLU(True),
-                                        nn.Conv2d(64, 64, kernel_size=3, stride=1),
-                                        nn.ReLU(True)
-                                        )
-        self.classifier = nn.Sequential(nn.Linear(7*7*64, 512),
-                                        nn.ReLU(True),
-                                        nn.Linear(512, num_classes)
-                                        )
+        self.cnn = nn.Sequential(
+            nn.Conv2d(3, 32, kernel_size=(210, 160), stride=4, padding=(4, 4)),
+            nn.ReLU(True),
+            nn.Conv2d(32, 64, kernel_size=(4, 4), stride=2, padding=(2, 2)),
+            nn.ReLU(True),
+            nn.Conv2d(64, 64, kernel_size=(2, 2), stride=1, padding=(1, 1)),
+            nn.ReLU(True)
+        )
+        self.classifier = nn.Sequential(
+            nn.Linear(576, 512),
+            nn.ReLU(True),
+            nn.Linear(512, num_classes)
+        )
 
         if init_weights:
             self._initialize_weights()
 
     def forward(self, x):
+        x = x.permute(0, 3, 1, 2)   # My
+        # print("x.shape:", x.shape)
         x = x.float() / 255.
         x = self.cnn(x)
         x = torch.flatten(x, start_dim=1)
+        # print("x.shape after cnn:", x.shape)
         x = self.classifier(x)
         return x
 
