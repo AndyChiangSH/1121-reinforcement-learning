@@ -17,8 +17,8 @@ if __name__ == '__main__':
         "update_freq": 4,
         "update_target_freq": 10000,
         "learning_rate": 0.0000625,
-        # "eval_interval": 100,
-        "eval_interval": 5,
+        "eval_interval": 100,
+        # "eval_interval": 5,   # test
         "eval_episode": 5,
         "env_id": 'ALE/MsPacman-v5',
         "use_double": False,
