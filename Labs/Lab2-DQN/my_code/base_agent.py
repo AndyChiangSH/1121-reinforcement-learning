@@ -75,6 +75,11 @@ class DQNBaseAgent(ABC):
                     self.epsilon_decay()
 
                 next_observation, reward, terminate, truncate, info = self.env.step(action)
+                
+                # # negative reward for bad action
+                # if action == 0 or action == 5 or action == 6 or action == 7 or action == 8:
+                #     reward -= 1
+                
                 self.replay_buffer.append(observation, [action], [reward], next_observation, [int(terminate)])
 
                 if self.total_time_step >= self.warmup_steps:

@@ -18,7 +18,6 @@ class AtariNetDQN(nn.Module):
             nn.Linear(9216, 512),
             nn.ReLU(True),
             nn.Linear(512, num_classes)
-            nn.Linear(512, num_classes)
         )
 
         if init_weights:
