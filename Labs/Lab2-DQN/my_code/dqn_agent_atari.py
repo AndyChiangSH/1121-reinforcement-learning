@@ -13,12 +13,12 @@ class AtariDQNAgent(DQNBaseAgent):
         ### TODO ###
         # initialize env
         # self.env = ???
-        self.env = gym.make(config["env_id"])
+        self.env = gym.make(config["env_id"], obs_type=config["obs_type"])
 
         ### TODO ###
         # initialize test_env
         # self.test_env = ???
-        self.test_env = gym.make(config["env_id"], render_mode='human')
+        self.test_env = gym.make(config["env_id"], render_mode='human', obs_type=config["obs_type"])
 
         # initialize behavior network and target network
         self.behavior_net = AtariNetDQN(num_classes=self.env.action_space.n)

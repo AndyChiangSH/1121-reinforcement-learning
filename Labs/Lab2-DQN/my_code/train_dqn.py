@@ -22,6 +22,8 @@ if __name__ == '__main__':
         "eval_episode": 5,
         "env_id": 'ALE/MsPacman-v5',
         "use_double": False,
+        # "obs_type": "rgb",
+        "obs_type": "grayscale",
     }
     agent = AtariDQNAgent(config)
     agent.train()
