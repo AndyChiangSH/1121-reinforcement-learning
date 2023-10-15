@@ -3,7 +3,7 @@ import torch.nn as nn
 import numpy as np
 from torch.utils.tensorboard import SummaryWriter
 from base_agent import DQNBaseAgent
-from models.atari_model_4 import AtariNetDQN
+from models.atari_model_dueling_1 import AtariNetDQN
 import gym
 import random
 
@@ -75,12 +75,6 @@ class AtariDQNAgent(DQNBaseAgent):
 
             # if episode terminates at next_state, then q_target = reward
             # q_target = ???
-            
-        # negative reward for bad action
-        # print("action:", action)
-        # print("reward:", reward)
-        # if action == 0 or action == 5 or action == 6 or action == 7 or action == 8:
-        #     reward = -1
 
         action = action.type(torch.long)
         # print("action:", action)

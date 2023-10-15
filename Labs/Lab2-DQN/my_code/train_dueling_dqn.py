@@ -1,4 +1,4 @@
-from dqn_agent_atari import AtariDQNAgent
+from dueling_dqn_agent_atari import AtariDQNAgent
 
 if __name__ == '__main__':
     # my hyperparameters, you can change it as you like
@@ -13,7 +13,7 @@ if __name__ == '__main__':
         "eps_decay": 1000000,
         "eval_epsilon": 0.01,
         "replay_buffer_capacity": 100000,
-        "logdir": 'log/DQN_6/',
+        "logdir": 'log/Dueling_DQN_1/',
         "update_freq": 4,
         "update_target_freq": 10000,
         "learning_rate": 0.0000625,
@@ -22,6 +22,8 @@ if __name__ == '__main__':
         "eval_episode": 5,
         "env_id": 'ALE/MsPacman-v5',
         "use_double": False,
+        # "obs_type": "rgb",
+        "obs_type": "grayscale",
     }
     agent = AtariDQNAgent(config)
     agent.train()
