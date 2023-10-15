@@ -7,15 +7,15 @@ class AtariNetDQN(nn.Module):
     def __init__(self, num_classes=4, init_weights=True):
         super(AtariNetDQN, self).__init__()
         self.cnn = nn.Sequential(
-            nn.Conv2d(3, 16, kernel_size=(10, 10), stride=(4, 3)),
+            nn.Conv2d(3, 16, kernel_size=(21, 16), stride=(3, 3)),
             nn.ReLU(True),
-            nn.Conv2d(16, 32, kernel_size=(10, 10), stride=(2, 2)),
+            nn.Conv2d(16, 32, kernel_size=(21, 16), stride=(2, 2)),
             nn.ReLU(True),
-            nn.Conv2d(32, 64, kernel_size=(10, 10), stride=(1, 1)),
+            nn.Conv2d(32, 64, kernel_size=(8, 11), stride=(1, 1)),
             nn.ReLU(True)
         )
         self.classifier = nn.Sequential(
-            nn.Linear(9216, 512),
+            nn.Linear(6720, 512),
             nn.ReLU(True),
             nn.Linear(512, num_classes)
         )
