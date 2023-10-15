@@ -3,7 +3,7 @@ import torch.nn as nn
 import numpy as np
 from torch.utils.tensorboard import SummaryWriter
 from base_agent import DQNBaseAgent
-from models.atari_model_4 import AtariNetDQN
+from models.atari_model_3 import AtariNetDQN
 import gym
 import random
 

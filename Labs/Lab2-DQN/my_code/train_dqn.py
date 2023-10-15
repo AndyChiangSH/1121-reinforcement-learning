@@ -13,7 +13,7 @@ if __name__ == '__main__':
         "eps_decay": 1000000,
         "eval_epsilon": 0.01,
         "replay_buffer_capacity": 100000,
-        "logdir": 'log/DQN_6/',
+        "logdir": 'log/DQN_7/',
         "update_freq": 4,
         "update_target_freq": 10000,
         "learning_rate": 0.0000625,
