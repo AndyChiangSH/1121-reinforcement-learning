@@ -3,7 +3,7 @@ import torch.nn as nn
 import numpy as np
 from torch.utils.tensorboard import SummaryWriter
 from base_agent import DQNBaseAgent
-from models.atari_model_4 import AtariNetDQN
+from models.atari_model_3 import AtariNetDQN
 import gym
 import random
 
@@ -19,6 +19,7 @@ class AtariDQNAgent(DQNBaseAgent):
         # initialize test_env
         # self.test_env = ???
         self.test_env = gym.make(config["env_id"], render_mode='human', obs_type=config["obs_type"])
+        # self.test_env = gym.Wrapper.RecordVideo(self.test_env, "./videos", episode_trigger=lambda x: True)
 
         # initialize behavior network and target network
         self.behavior_net = AtariNetDQN(num_classes=self.env.action_space.n)

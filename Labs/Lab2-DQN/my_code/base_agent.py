@@ -109,6 +109,7 @@ class DQNBaseAgent(ABC):
         all_rewards = []
         for i in range(self.eval_episode):
             observation, info = self.test_env.reset()
+            # self.test_env.start_video_recorder()    # Start recording
             total_reward = 0
             while True:
                 self.test_env.render()
