@@ -13,6 +13,7 @@ class PPOBaseAgent(ABC):
 	def __init__(self, config):
 		self.gpu = config["gpu"]
 		self.device = torch.device("cuda" if self.gpu and torch.cuda.is_available() else "cpu")
+		#self.device = torch.device('cpu')
 		self.total_time_step = 0
 		self.training_steps = int(config["training_steps"])
 		self.update_sample_count = int(config["update_sample_count"])
@@ -58,10 +59,34 @@ class PPOBaseAgent(ABC):
 			episode_len = 0
 			episode_idx += 1
 			while True:
-				action, value, logp_pi = self.decide_agent_actions(observation)
+				#print('observation')
+				#print(episode_len)
+				#print(observation.shape)
+
+				if episode_len < 1:
+					#print(observation.shape)
+					#print(episode_len)
+					observation = np.asarray([observation[0],observation[0],observation[0],observation[0]])
+					#print(observation.shape)
+				action, value, logp_pi = self.decide_agent_actions(np.asarray([observation]))
+
+				action = action.cpu().detach().numpy()
+				value = value.cpu().detach().numpy()
+				logp_pi = logp_pi.cpu().detach().numpy()
+
 				next_observation, reward, terminate, truncate, info = self.env.step(action[0])
 				# observation must be dict before storing into gae_replay_buffer
 				# dimension of reward, value, logp_pi, done must be the same
+
+				if episode_len < 4:
+					next_observation = np.asarray([next_observation[0],next_observation[0],next_observation[0],next_observation[0]])
+					#episode_len += 1
+					#continue
+				#else:
+				#	next_observation = np.asarray([next_observation])
+
+				#print(observation.shape)
+				#print(next_observation.shape)
 				obs = {}
 				obs["observation_2d"] = np.asarray(observation, dtype=np.float32)
 				self.gae_replay_buffer.append(0, {
@@ -102,11 +127,19 @@ class PPOBaseAgent(ABC):
 		for i in range(self.eval_episode):
 			observation, info = self.test_env.reset()
 			total_reward = 0
+			episode_len = 0
 			while True:
-				self.test_env.render()
-				action, _, _ = self.decide_agent_actions(observation, eval=True)
+				#self.test_env.render()
+				if episode_len < 1:
+					observation = np.asarray([observation[0],observation[0],observation[0],observation[0]])
+				action, _, _ = self.decide_agent_actions(np.asarray([observation]), eval=True)
+				#action, _, _ = self.decide_agent_actions(np.asarray([observation]), eval=False)
+				#print(action)
 				next_observation, reward, terminate, truncate, info = self.test_env.step(action[0])
+				if episode_len < 4:
+					next_observation = np.asarray([next_observation[0],next_observation[0],next_observation[0],next_observation[0]])
 				total_reward += reward
+				episode_len += 1
 				if terminate or truncate:
 					print(f"episode {i+1} reward: {total_reward}")
 					all_rewards.append(total_reward)
