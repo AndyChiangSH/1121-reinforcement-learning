@@ -34,6 +34,8 @@ class PPOBaseAgent(ABC):
 			})
 
 		self.writer = SummaryWriter(config["logdir"])
+  
+		print("device:", self.device)
 
 	@abstractmethod
 	def decide_agent_actions(self, observation):
