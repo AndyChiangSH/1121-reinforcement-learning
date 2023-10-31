@@ -76,7 +76,7 @@ if __name__ == '__main__':
         "batch_size": 128,
         "logdir": 'log/PPO-6/',
         "update_ppo_epoch": 3,
-        "learning_rate": 1e-3,
+        "learning_rate": 1e-5,
         "value_coefficient": 0.5,
         "entropy_coefficient": 0.01,
         "horizon": 128,
