@@ -40,6 +40,7 @@ class AtariPPOAgent(PPOBaseAgent):
 		# initialize test_env
 		# self.test_env = ???
 		self.test_env = gym.make(config["env_id"])
+		# self.test_env = gym.make(config["env_id"], render_mode='human')
 		self.test_env = CustomObservationWrapper(self.test_env)
 
 		self.net = AtariNet(self.env.action_space.n)

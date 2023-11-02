@@ -131,7 +131,7 @@ class PPOBaseAgent(ABC):
 			total_reward = 0
 			episode_len = 0
 			while True:
-				#self.test_env.render()
+				# self.test_env.render()
 				if episode_len < 1:
 					observation = np.asarray([observation[0],observation[0],observation[0],observation[0]])
 				action, _, _ = self.decide_agent_actions(np.asarray([observation]), eval=True)
