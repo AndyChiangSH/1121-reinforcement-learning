@@ -1,3 +1,4 @@
+import random
 import torch
 import torch.nn as nn
 import numpy as np
@@ -34,8 +35,10 @@ class PPOBaseAgent(ABC):
 			})
 
 		self.writer = SummaryWriter(config["logdir"])
+
+		self.seed = config["seed"]
   
-		print("device:", self.device)
+		print("config:", config)
 
 	@abstractmethod
 	def decide_agent_actions(self, observation):
@@ -127,7 +130,12 @@ class PPOBaseAgent(ABC):
 		print("Evaluating...")
 		all_rewards = []
 		for i in range(self.eval_episode):
-			observation, info = self.test_env.reset()
+			# set seed
+			observation, info = self.test_env.reset(seed=self.seed)
+			self.test_env.seed(self.seed)
+			self.test_env.action_space.seed(self.seed)
+			self.set_seed(self.seed)
+
 			total_reward = 0
 			episode_len = 0
 			while True:
@@ -168,6 +176,11 @@ class PPOBaseAgent(ABC):
 		self.load(load_path)
 		self.evaluate()
 
-
+	def set_seed(self, seed_value):
+		random.seed(seed_value)
+		np.random.seed(seed_value)
+		torch.manual_seed(seed_value)
+		torch.cuda.manual_seed(seed_value)
+		torch.cuda.manual_seed_all(seed_value)
 	
 

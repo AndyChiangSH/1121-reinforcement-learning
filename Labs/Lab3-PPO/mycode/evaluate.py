@@ -104,6 +104,7 @@ if __name__ == '__main__':
         "env_id": 'ALE/Enduro-v5',
         "eval_interval": 100,
         "eval_episode": 3,
+        "seed": 0,
     }
 
     agent = AtariPPOAgent(config)
