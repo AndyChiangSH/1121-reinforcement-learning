@@ -37,6 +37,7 @@ class PPOBaseAgent(ABC):
 		self.writer = SummaryWriter(config["logdir"])
 
 		self.seed = config["seed"]
+		self.render = config["render"]
   
 		print("config:", config)
 

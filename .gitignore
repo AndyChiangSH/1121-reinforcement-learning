@@ -1,4 +1,5 @@
 .vscode/
 
-/Labs/Lab1-2048/weights/
-/Labs/Lab1-2048/demo/weights-demo.bin
+Labs/Lab1-2048/weights/
+Labs/Lab1-2048/demo/weights-demo.bin
+Labs/Lab3-PPO/demo.webm
