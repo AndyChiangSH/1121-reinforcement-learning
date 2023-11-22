@@ -58,6 +58,8 @@ class TD3BaseAgent(ABC):
 	
 		self.replay_buffer = ReplayMemory(int(config["replay_buffer_capacity"]))
 		self.writer = SummaryWriter(config["logdir"])
+  
+		self.render = config["render"]
 
 	@abstractmethod
 	def decide_agent_actions(self, state, sigma=0.0):
