@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 from base_agent import TD3BaseAgent
-from models.CarRacing_model import ActorNetSimple, CriticNetSimple
+from models.CarRacing_model import ActorNetSimple, CriticNetSimple, ActorNet, CriticNet
 from environment_wrapper.CarRacingEnv import CarRacingEnvironment
 import random
 from base_agent import OUNoiseGenerator, GaussianNoise
@@ -14,20 +14,38 @@ class CarRacingTD3Agent(TD3BaseAgent):
         self.env = CarRacingEnvironment(N_frame=4, test=False)
         self.test_env = CarRacingEnvironment(N_frame=4, test=self.render)
                 
+        # # behavior network
+        # self.actor_net = ActorNetSimple(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
+        # self.critic_net1 = CriticNetSimple(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
+        # self.critic_net2 = CriticNetSimple(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
+        # self.actor_net = self.actor_net.to(self.device)
+        # self.critic_net1 = self.critic_net1.to(self.device)
+        # self.critic_net2 = self.critic_net2.to(self.device)
+        # # target network
+        # self.target_actor_net = ActorNetSimple(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
+        # self.target_critic_net1 = CriticNetSimple(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
+        # self.target_critic_net2 = CriticNetSimple(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
+        # self.target_actor_net = self.target_actor_net.to(self.device)
+        # self.target_critic_net1 = self.target_critic_net1.to(self.device)
+        # self.target_critic_net2 = self.target_critic_net2.to(self.device)
+        # self.target_actor_net.load_state_dict(self.actor_net.state_dict())
+        # self.target_critic_net1.load_state_dict(self.critic_net1.state_dict())
+        # self.target_critic_net2.load_state_dict(self.critic_net2.state_dict())
+
         # behavior network
-        self.actor_net = ActorNetSimple(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
-        self.critic_net1 = CriticNetSimple(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
-        self.critic_net2 = CriticNetSimple(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
-        self.actor_net = self.actor_net.to(self.device)
-        self.critic_net1 = self.critic_net1.to(self.device)
-        self.critic_net2 = self.critic_net2.to(self.device)
+        self.actor_net = ActorNet(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
+        self.critic_net1 = CriticNet(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
+        self.critic_net2 = CriticNet(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
+        self.actor_net.to(self.device)
+        self.critic_net1.to(self.device)
+        self.critic_net2.to(self.device)
         # target network
-        self.target_actor_net = ActorNetSimple(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
-        self.target_critic_net1 = CriticNetSimple(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
-        self.target_critic_net2 = CriticNetSimple(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
-        self.target_actor_net = self.target_actor_net.to(self.device)
-        self.target_critic_net1 = self.target_critic_net1.to(self.device)
-        self.target_critic_net2 = self.target_critic_net2.to(self.device)
+        self.target_actor_net = ActorNet(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
+        self.target_critic_net1 = CriticNet(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
+        self.target_critic_net2 = CriticNet(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
+        self.target_actor_net.to(self.device)
+        self.target_critic_net1.to(self.device)
+        self.target_critic_net2.to(self.device)
         self.target_actor_net.load_state_dict(self.actor_net.state_dict())
         self.target_critic_net1.load_state_dict(self.critic_net1.state_dict())
         self.target_critic_net2.load_state_dict(self.critic_net2.state_dict())
@@ -59,10 +77,17 @@ class CarRacingTD3Agent(TD3BaseAgent):
         # return action
 
         # return NotImplementedError
-        with torch.no_grad():
-            state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
-            action = self.actor_net.forward(state, brake_rate).cpu().detach().numpy()[0] + sigma * self.noise.generate()
         
+        # with torch.no_grad():
+        #     state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
+        #     action = self.actor_net.forward(state, brake_rate).cpu().detach().numpy()[0] + sigma * self.noise.generate()
+        
+        with torch.no_grad():
+            state = torch.FloatTensor(state).unsqueeze(0)
+            action = self.actor_net(state.to(self.device), sigma, brake_rate)
+            action = action.cpu().numpy().squeeze()
+            action += (self.noise.generate() * sigma)
+   
         return action
         
 
@@ -83,19 +108,28 @@ class CarRacingTD3Agent(TD3BaseAgent):
         # 	# select action a_next from target actor network and add noise for smoothing
         # 	a_next = ??? + noise
         
-        q_value1 = self.critic_net1.forward(state, action)
-        q_value2 = self.critic_net2.forward(state, action)
-        with torch.no_grad():
-            a_next = self.target_actor_net.forward(next_state).detach() + 0.005 * torch.randn_like(action)
+        # q_value1 = self.critic_net1.forward(state, action)
+        # q_value2 = self.critic_net2.forward(state, action)
+        # with torch.no_grad():
+        #     a_next = self.target_actor_net.forward(next_state).detach() + 0.005 * torch.randn_like(action)
 
         # 	q_next1 = ???
         # 	q_next2 = ???
         # 	# select min q value from q_next1 and q_next2 (double Q learning)
         # 	q_target = ???
         
-            q_next1 = self.target_critic_net1.forward(next_state, a_next).detach()
-            q_next2 = self.target_critic_net2.forward(next_state, a_next).detach()
-            q_target = reward.unsqueeze(1) + self.gamma * torch.min(q_next1, q_next2) * (1-done.unsqueeze(1))
+            # q_next1 = self.target_critic_net1.forward(next_state, a_next).detach()
+            # q_next2 = self.target_critic_net2.forward(next_state, a_next).detach()
+            # q_target = reward.unsqueeze(1) + self.gamma * torch.min(q_next1, q_next2) * (1-done.unsqueeze(1))
+
+        q_value1 = self.critic_net1(state, action)
+        q_value2 = self.critic_net2(state, action)
+        with torch.no_grad():
+            a_next = self.target_actor_net(next_state) + 0.005 * torch.randn_like(action)
+
+            q_next1 = self.target_critic_net1(next_state, a_next)
+            q_next2 = self.target_critic_net2(next_state, a_next)
+            q_target = reward + self.gamma * torch.min(q_next1, q_next2) * (1 - done)
         
         # critic loss function
         criterion = nn.MSELoss()
@@ -111,15 +145,14 @@ class CarRacingTD3Agent(TD3BaseAgent):
         critic_loss2.backward()
         self.critic_opt2.step()
 
-        ## Delayed Actor(Policy) Updates ##
         if self.total_time_step % self.update_freq == 0:
             ## update actor ##
             # actor loss
             # select action a from behavior actor network (a is different from sample transition's action)
             # get Q from behavior critic network, mean Q value -> objective function
             # maximize (objective function) = minimize -1 * (objective function)
-            action = self.actor_net.forward(state)
-            actor_loss = -1 * self.critic_net1.forward(state, action).mean()
+            action = self.actor_net(state)
+            actor_loss = -1 * (self.critic_net1(state, action).mean())
             # optimize actor
             self.actor_net.zero_grad()
             actor_loss.backward()
