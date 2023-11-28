@@ -35,20 +35,20 @@ class CarRacingTD3Agent(TD3BaseAgent):
         # behavior network
         self.actor_net = ActorNet(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
         self.critic_net1 = CriticNet(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
-        self.critic_net2 = CriticNet(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
+        # self.critic_net2 = CriticNet(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
         self.actor_net.to(self.device)
         self.critic_net1.to(self.device)
-        self.critic_net2.to(self.device)
+        # self.critic_net2.to(self.device)
         # target network
         self.target_actor_net = ActorNet(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
         self.target_critic_net1 = CriticNet(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
-        self.target_critic_net2 = CriticNet(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
+        # self.target_critic_net2 = CriticNet(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
         self.target_actor_net.to(self.device)
         self.target_critic_net1.to(self.device)
-        self.target_critic_net2.to(self.device)
+        # self.target_critic_net2.to(self.device)
         self.target_actor_net.load_state_dict(self.actor_net.state_dict())
         self.target_critic_net1.load_state_dict(self.critic_net1.state_dict())
-        self.target_critic_net2.load_state_dict(self.critic_net2.state_dict())
+        # self.target_critic_net2.load_state_dict(self.critic_net2.state_dict())
         
         # set optimizer
         self.lra = config["lra"]
@@ -56,7 +56,7 @@ class CarRacingTD3Agent(TD3BaseAgent):
         
         self.actor_opt = torch.optim.Adam(self.actor_net.parameters(), lr=self.lra)
         self.critic_opt1 = torch.optim.Adam(self.critic_net1.parameters(), lr=self.lrc)
-        self.critic_opt2 = torch.optim.Adam(self.critic_net2.parameters(), lr=self.lrc)
+        # self.critic_opt2 = torch.optim.Adam(self.critic_net2.parameters(), lr=self.lrc)
 
         # choose Gaussian noise or OU noise
 
@@ -123,27 +123,27 @@ class CarRacingTD3Agent(TD3BaseAgent):
             # q_target = reward.unsqueeze(1) + self.gamma * torch.min(q_next1, q_next2) * (1-done.unsqueeze(1))
 
         q_value1 = self.critic_net1(state, action)
-        q_value2 = self.critic_net2(state, action)
+        # q_value2 = self.critic_net2(state, action)
         with torch.no_grad():
             a_next = self.target_actor_net(next_state) + 0.005 * torch.randn_like(action)
 
             q_next1 = self.target_critic_net1(next_state, a_next)
-            q_next2 = self.target_critic_net2(next_state, a_next)
-            q_target = reward + self.gamma * torch.min(q_next1, q_next2) * (1 - done)
+            # q_next2 = self.target_critic_net2(next_state, a_next)
+            q_target = reward + self.gamma * q_next1 * (1 - done)
         
         # critic loss function
         criterion = nn.MSELoss()
         critic_loss1 = criterion(q_value1, q_target)
-        critic_loss2 = criterion(q_value2, q_target)
+        # critic_loss2 = criterion(q_value2, q_target)
 
         # optimize critic
         self.critic_net1.zero_grad()
         critic_loss1.backward()
         self.critic_opt1.step()
 
-        self.critic_net2.zero_grad()
-        critic_loss2.backward()
-        self.critic_opt2.step()
+        # self.critic_net2.zero_grad()
+        # critic_loss2.backward()
+        # self.critic_opt2.step()
 
         if self.total_time_step % self.update_freq == 0:
             ## update actor ##

@@ -60,11 +60,11 @@ class CarRacingTD3Agent(TD3BaseAgent):
 
         # choose Gaussian noise or OU noise
 
-        noise_mean = np.full(self.env.action_space.shape[0], 0.0, np.float32)
-        noise_std = np.full(self.env.action_space.shape[0], 1.0, np.float32)
-        self.noise = OUNoiseGenerator(noise_mean, noise_std)
+        # noise_mean = np.full(self.env.action_space.shape[0], 0.0, np.float32)
+        # noise_std = np.full(self.env.action_space.shape[0], 1.0, np.float32)
+        # self.noise = OUNoiseGenerator(noise_mean, noise_std)
 
-        # self.noise = GaussianNoise(self.env.action_space.shape[0], 0.0, 1.0)
+        self.noise = GaussianNoise(self.env.action_space.shape[0], 0.0, 1.0)
         
     
     def decide_agent_actions(self, state, sigma=0.0, brake_rate=0.015):

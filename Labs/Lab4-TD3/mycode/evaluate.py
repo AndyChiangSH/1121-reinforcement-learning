@@ -58,6 +58,6 @@ if __name__ == '__main__':
      
     agent = CarRacingTD3Agent(config)
     agent.load_and_evaluate(
-        "./log/TD3-3/model_2467729_717.pth")
+        "./log/TD3-4/model_4554393_829.pth")
 
 

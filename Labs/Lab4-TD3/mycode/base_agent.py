@@ -76,7 +76,7 @@ class TD3BaseAgent(ABC):
 		if self.total_time_step % self.update_freq == 0:
 			self.update_target_network(self.target_actor_net, self.actor_net, self.tau)
 			self.update_target_network(self.target_critic_net1, self.critic_net1, self.tau)
-			self.update_target_network(self.target_critic_net2, self.critic_net2, self.tau)
+			# self.update_target_network(self.target_critic_net2, self.critic_net2, self.tau)
 
 	@abstractmethod
 	def update_behavior_network(self):
@@ -160,7 +160,7 @@ class TD3BaseAgent(ABC):
 				{
 					'actor': self.actor_net.state_dict(),
 					'critic1': self.critic_net1.state_dict(),
-					'critic2': self.critic_net2.state_dict(),
+					# 'critic2': self.critic_net2.state_dict(),
 				}, save_path)
 
 	# load model
@@ -168,7 +168,7 @@ class TD3BaseAgent(ABC):
 		checkpoint = torch.load(load_path)
 		self.actor_net.load_state_dict(checkpoint['actor'])
 		self.critic_net1.load_state_dict(checkpoint['critic1'])
-		self.critic_net2.load_state_dict(checkpoint['critic2'])
+		# self.critic_net2.load_state_dict(checkpoint['critic2'])
 
 	# load model weights and evaluate
 	def load_and_evaluate(self, load_path):
