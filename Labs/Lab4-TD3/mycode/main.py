@@ -1,4 +1,4 @@
-from td3_agent_CarRacing_3 import CarRacingTD3Agent
+from td3_agent_CarRacing import CarRacingTD3Agent
 
 if __name__ == '__main__':
     # my hyperparameters, you can change it as you like
@@ -110,6 +110,24 @@ if __name__ == '__main__':
     #     "render": False,
     # }
 
+    # config = {
+    #     "gpu": True,
+    #     "training_steps": 1e8,
+    #     "gamma": 0.99,
+    #     "tau": 0.005,
+    #     "batch_size": 32,
+    #     "warmup_steps": 1000,
+    #     "total_episode": 100000,
+    #     "lra": 4.5e-5,
+    #     "lrc": 4.5e-5,
+    #     "replay_buffer_capacity": 5000,
+    #     "logdir": 'log/TD3-7',
+    #     "update_freq": 1,
+    #     "eval_interval": 100,
+    #     "eval_episode": 10,
+    #     "render": False,
+    # }
+
     config = {
         "gpu": True,
         "training_steps": 1e8,
@@ -121,11 +139,11 @@ if __name__ == '__main__':
         "lra": 4.5e-5,
         "lrc": 4.5e-5,
         "replay_buffer_capacity": 5000,
-        "logdir": 'log/TD3-7',
-        "update_freq": 1,
+        "logdir": 'log/TD3-8',
+        "update_freq": 2,
         "eval_interval": 100,
         "eval_episode": 10,
-        "render": False,
+        "render": True,
     }
 
     agent = CarRacingTD3Agent(config)

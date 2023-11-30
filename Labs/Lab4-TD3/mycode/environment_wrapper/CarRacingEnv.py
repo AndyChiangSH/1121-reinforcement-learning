@@ -57,6 +57,9 @@ class CarRacingEnvironment:
 			terminates = True
 			reward = -100
 
+		# my reward function
+		reward -= 0.1 * grass_pixel_count
+  
 		# convert to grayscale
 		obs = cv2.cvtColor(obs, cv2.COLOR_BGR2GRAY) # 96x96
 
@@ -109,7 +112,7 @@ if __name__ == '__main__':
 		print(f'{t}: road_pixel_count: {info["road_pixel_count"]}, grass_pixel_count: {info["grass_pixel_count"]}, reward: {reward}')
 		total_reward += reward
 		total_length += 1
-		env.render()
+		# env.render()
 		if terminates or truncates:
 			done = True
 
