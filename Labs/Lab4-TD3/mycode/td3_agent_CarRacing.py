@@ -12,7 +12,7 @@ class CarRacingTD3Agent(TD3BaseAgent):
         super(CarRacingTD3Agent, self).__init__(config)
         # initialize environment
         self.env = CarRacingEnvironment(N_frame=4, test=False)
-        self.test_env = CarRacingEnvironment(N_frame=4, test=self.render)
+        self.test_env = CarRacingEnvironment(N_frame=4, test=True)
                 
         # # behavior network
         # self.actor_net = ActorNetSimple(self.env.observation_space.shape[0], self.env.action_space.shape[0], 4)
