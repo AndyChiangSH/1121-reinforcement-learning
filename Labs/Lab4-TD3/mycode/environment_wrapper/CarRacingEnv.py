@@ -12,11 +12,11 @@ import torch.nn as nn
 from torch.utils.tensorboard import SummaryWriter
 
 class CarRacingEnvironment:
-	def __init__(self, N_frame=4, test=False):
+	def __init__(self, N_frame=4, test=False, render=False):
 		self.test = test
-		if self.test:
-			# self.env = gym.make('CarRacing-v2', render_mode="human")
-			self.env = gym.make('CarRacing-v2')
+		if render:
+			self.env = gym.make('CarRacing-v2', render_mode="human")
+			# self.env = gym.make('CarRacing-v2')
 		else:
 			self.env = gym.make('CarRacing-v2')
 		self.action_space = self.env.action_space
@@ -59,6 +59,7 @@ class CarRacingEnvironment:
 			reward = -100
 
 		# my reward function
+		reward += 0.1 * road_pixel_count
 		reward -= 0.1 * grass_pixel_count
   
 		# convert to grayscale
