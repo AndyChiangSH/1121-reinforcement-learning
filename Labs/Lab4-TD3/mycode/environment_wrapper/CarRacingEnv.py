@@ -60,7 +60,7 @@ class CarRacingEnvironment:
 
 		# my reward function
 		reward += 0.1 * road_pixel_count
-		reward -= 0.1 * grass_pixel_count
+		# reward -= 0.1 * grass_pixel_count
   
 		# convert to grayscale
 		obs = cv2.cvtColor(obs, cv2.COLOR_BGR2GRAY) # 96x96

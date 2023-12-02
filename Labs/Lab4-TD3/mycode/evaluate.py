@@ -49,10 +49,10 @@ if __name__ == '__main__':
         "lra": 4.5e-5,
         "lrc": 4.5e-5,
         "replay_buffer_capacity": 5000,
-        "logdir": 'log/TD3-3',
+        "logdir": 'log/TD3-10',
         "update_freq": 4,
         "eval_interval": 100,
-        "eval_episode": 10,
+        "eval_episode": 5,
         "render": True,
     }
      
