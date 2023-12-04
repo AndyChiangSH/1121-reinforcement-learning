@@ -62,7 +62,7 @@ class CarRacingEnvironment:
             reward = -100
 
         # my reward function
-        # reward -= 0.1 * grass_pixel_count
+        reward -= 0.1 * grass_pixel_count
         # reward += 0.1 * road_pixel_count
         # try:
         #     reward -= grass_pixel_count / road_pixel_count
