@@ -50,14 +50,14 @@ if __name__ == '__main__':
         "lrc": 4.5e-5,
         "replay_buffer_capacity": 5000,
         "logdir": 'log/TD3-10',
-        "update_freq": 4,
+        "update_freq": 2,
         "eval_interval": 100,
-        "eval_episode": 10,
+        "eval_episode": 1,
         "render": True,
     }
      
     agent = CarRacingTD3Agent(config)
     agent.load_and_evaluate(
-        "log/TD3-9-2/model_4502673_862.pth")
+        "log/TD3-3/model_7971821_886.pth")
 
 

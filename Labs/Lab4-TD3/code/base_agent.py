@@ -74,7 +74,7 @@ class TD3BaseAgent(ABC):
 		if self.total_time_step % self.update_freq == 0:
 			self.update_target_network(self.target_actor_net, self.actor_net, self.tau)
 			self.update_target_network(self.target_critic_net1, self.critic_net1, self.tau)
-			self.update_target_network(self.target_critic_net2, self.critic_net2, self.tau)
+			self.update_target_network(self.target_critic_net2, self.critic_net2, self.tau)# modify 
 
 	@abstractmethod
 	def update_behavior_network(self):
@@ -103,7 +103,8 @@ class TD3BaseAgent(ABC):
 					action = self.env.action_space.sample()
 				else:
 					# exploration degree
-					sigma = max(0.1*(1-episode/self.total_episode), 0.01)
+					sigma = max(0.1*(1-episode/self.total_episode), 0.01) # modify
+					#sigma = 0
 					action = self.decide_agent_actions(state, sigma=sigma)
 				
 				next_state, reward, terminates, truncates, _ = self.env.step(action)
@@ -158,7 +159,7 @@ class TD3BaseAgent(ABC):
 				{
 					'actor': self.actor_net.state_dict(),
 					'critic1': self.critic_net1.state_dict(),
-					'critic2': self.critic_net2.state_dict(),
+					'critic2': self.critic_net2.state_dict(),# modify
 				}, save_path)
 
 	# load model

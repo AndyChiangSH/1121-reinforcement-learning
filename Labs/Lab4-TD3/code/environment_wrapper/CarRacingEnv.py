@@ -16,6 +16,7 @@ class CarRacingEnvironment:
 		self.test = test
 		if self.test:
 			self.env = gym.make('CarRacing-v2', render_mode="human")
+			# self.env = gym.make('CarRacing-v2')
 		else:
 			self.env = gym.make('CarRacing-v2')
 		self.action_space = self.env.action_space
@@ -57,6 +58,8 @@ class CarRacingEnvironment:
 			terminates = True
 			reward = -100
 
+		reward -= 0.1*grass_pixel_count # modify 
+
 		# convert to grayscale
 		obs = cv2.cvtColor(obs, cv2.COLOR_BGR2GRAY) # 96x96
 
@@ -77,7 +80,7 @@ class CarRacingEnvironment:
 		return obs, reward, terminates, truncates, info
 	
 	def reset(self):
-		obs, info = self.env.reset()
+		obs, info = self.env.reset(seed=2713)
 		self.ep_len = 0
 		obs = cv2.cvtColor(obs, cv2.COLOR_BGR2GRAY) # 96x96
 
@@ -109,7 +112,7 @@ if __name__ == '__main__':
 		print(f'{t}: road_pixel_count: {info["road_pixel_count"]}, grass_pixel_count: {info["grass_pixel_count"]}, reward: {reward}')
 		total_reward += reward
 		total_length += 1
-		env.render()
+		#env.render()
 		if terminates or truncates:
 			done = True
 
