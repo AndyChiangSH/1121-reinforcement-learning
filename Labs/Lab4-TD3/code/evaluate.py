@@ -22,7 +22,7 @@ if __name__ == '__main__':
 	agent = CarRacingTD3Agent(config)
 	#agent.load_and_evaluate('log/CarRacing/td3_test_new_reward_2/model_818209_918.pth') # modify 
 	agent.load_and_evaluate(
-		'log/TD-3-demo/model_2168037_917.pth')  # modify
+		'log/TD-3-demo/model_3783694_917.pth')  # modify
 	#agent.load_and_evaluate('log/CarRacing/td3_test_new_reward_2/model_674047_897.pth') # modify 
 	#agent.load_and_evaluate('model_3783694_917.pth') # modify 
 	#agent.train()
