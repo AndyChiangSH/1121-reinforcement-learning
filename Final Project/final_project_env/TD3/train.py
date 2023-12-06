@@ -15,11 +15,13 @@ if __name__ == '__main__':
 		"lra": 4.5e-4, #4.5e-5, 7
 		"lrc": 4.5e-4, #4.5e-5, 7
 		"replay_buffer_capacity": 5000,
-		"logdir": 'log/test',
 		"update_freq": 2, #B3
 		"eval_interval": 50,
 		"eval_episode": 5,
+		"logdir": 'log/TD3-circle-1',
+		"scenario": "circle_cw_competition_collisionStop"
 	}
+
 	agent = CarRacingTD3Agent(config)
 	# agent.load('./log/CarRacing/td3_test_Gousenoise_reward/model_1416250_909.pth')
 	# agent.load('/home/bryant/Documents/112_1/rl/final_project/final_project_env/TD3/model_906689_0.pth')

@@ -15,9 +15,11 @@ from racecar_gym.env import RaceEnv
 
 class CarRacingEnvironment:
     def __init__(self, N_frame=4, test=False, scenario='circle_cw_competition_collisionStop'):
-        env = RaceEnv(scenario=scenario,
+        env = RaceEnv(
+            scenario=scenario,
             render_mode='rgb_array_birds_eye',
-            reset_when_collision=True if 'austria' in scenario else False)
+            reset_when_collision=True if 'austria' in scenario else False
+        )
         
         self.test = test
         if self.test:
@@ -65,11 +67,12 @@ class CarRacingEnvironment:
         # if road_pixel_count < 10:
         # 	terminates = True
         # 	reward = -100
+        
         panalty = 0
         for p in info['collision_penalties']:
             panalty += p
             
-        reward -= panalty
+        reward += (info['lap'] + info['progress'] - 1) - panalty*0.1
    
         # reward +=  (0.01 * info['progress'] - 0.1 * info['n_collision']) - 0.01 * info['wrong_way'] + 0.01 * (info['lap']-1) - panalty * 0.01 #reward2
         # reward +=  (-0.01 * info['n_collision']) - 0.01 * info['wrong_way'] + 0.01 * (info['lap']-1) - panalty * 0.001 #reward3

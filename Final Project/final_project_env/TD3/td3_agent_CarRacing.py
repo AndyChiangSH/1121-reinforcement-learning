@@ -11,8 +11,10 @@ class CarRacingTD3Agent(TD3BaseAgent):
 	def __init__(self, config):
 		super(CarRacingTD3Agent, self).__init__(config)
 		# initialize environment
-		self.env = CarRacingEnvironment(N_frame=4, test=False)
-		self.test_env = CarRacingEnvironment(N_frame=4, test=True)
+		self.env = CarRacingEnvironment(
+			N_frame=4, test=False, scenario=config["scenario"])
+		self.test_env = CarRacingEnvironment(
+			N_frame=4, test=True, scenario=config["scenario"])
 
 		
 		# behavior network
