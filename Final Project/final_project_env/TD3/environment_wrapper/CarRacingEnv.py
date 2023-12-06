@@ -14,7 +14,7 @@ from torch.utils.tensorboard import SummaryWriter
 from racecar_gym.env import RaceEnv
 
 class CarRacingEnvironment:
-    def __init__(self, N_frame=4, test=False, scenario='austria_competition'):
+    def __init__(self, N_frame=4, test=False, scenario='circle_cw_competition_collisionStop'):
         env = RaceEnv(scenario=scenario,
             render_mode='rgb_array_birds_eye',
             reset_when_collision=True if 'austria' in scenario else False)
