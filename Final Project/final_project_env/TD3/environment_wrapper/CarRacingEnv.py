@@ -71,8 +71,12 @@ class CarRacingEnvironment:
         panalty = 0
         for p in info['collision_penalties']:
             panalty += p
-            
-        reward += (info['lap'] + info['progress'] - 1) - panalty*0.1
+        
+        # # TD3-circle-1 reward    
+        # reward += (info['lap'] + info['progress'] - 1) - panalty*0.1
+
+        # TD3-circle-2 reward
+        reward += (info['lap'] + info['progress'] - 1) - panalty - info['n_collision']
    
         # reward +=  (0.01 * info['progress'] - 0.1 * info['n_collision']) - 0.01 * info['wrong_way'] + 0.01 * (info['lap']-1) - panalty * 0.01 #reward2
         # reward +=  (-0.01 * info['n_collision']) - 0.01 * info['wrong_way'] + 0.01 * (info['lap']-1) - panalty * 0.001 #reward3
