@@ -1,0 +1,34 @@
+{
+    "pose": [
+        2.46409432e+00,
+        2.50540983e-01,
+        5.06128967e-02,
+        -7.36918158e-04,
+        2.75118281e-03,
+        2.49673365e-03
+    ], 
+    "wall_collision": false,
+    "opponent_collisions": [],
+    "acceleration": [0, 0, 0, 0, 0, 0], 
+    "velocity": [
+        0.21039854,
+        -0.00204342,
+        -0.00820454,
+        0.14771197,
+        0.03032918,
+        0.02842344
+    ],
+    "progress": 0.05847255369928401, 
+    "obstacle": 0.5789473684210527,
+    "dist_goal": 0.9420096947608526,
+    "time": 0.12000000000000001,
+    "checkpoint": 0,
+    "lap": 1,
+    "wrong_way": false,
+    "rank": 1,
+    "collision_penalties": [],
+    "n_collision": 0,
+    "reward": 0.0,
+    "road_pixel_count": 7764,
+    "grass_pixel_count": 4840
+}
