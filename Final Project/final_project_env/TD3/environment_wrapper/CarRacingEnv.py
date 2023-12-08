@@ -70,9 +70,9 @@ class CarRacingEnvironment:
         
         # print("info:", info)
         
-        panalty = 0
-        for p in info['collision_penalties']:
-            panalty += p
+        # panalty = 0
+        # for p in info['collision_penalties']:
+        #     panalty += p
         
         # TD3-circle-1 reward    
         # reward += (info['lap'] + info['progress'] - 1) - panalty*0.1
@@ -84,8 +84,11 @@ class CarRacingEnvironment:
         # reward -= info["grass_pixel_count"] * 0.1
 
         # TD3-circle-4 reward
-        reward += (info['lap'] + info['progress'] - 1) + info['time'] * 0.1
-   
+        # reward += (info['lap'] + info['progress'] - 1) + info['time'] * 0.1
+
+        # TD3-circle-5 reward
+        reward = (info['lap'] + info['progress'] - 1)
+
         # reward +=  (0.01 * info['progress'] - 0.1 * info['n_collision']) - 0.01 * info['wrong_way'] + 0.01 * (info['lap']-1) - panalty * 0.01 #reward2
         # reward +=  (-0.01 * info['n_collision']) - 0.01 * info['wrong_way'] + 0.01 * (info['lap']-1) - panalty * 0.001 #reward3
         # reward += 0.01 * info['progress'] #reward/fine_tune
