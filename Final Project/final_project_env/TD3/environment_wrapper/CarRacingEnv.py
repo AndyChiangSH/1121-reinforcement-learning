@@ -90,7 +90,10 @@ class CarRacingEnvironment:
         # reward = (info['lap'] - 1) + info['progress']
 
         # TD3-circle-6 reward
-        reward = info['progress']
+        # reward = info['progress']
+
+        # TD3-circle-7 reward
+        reward = (info['lap'] - 1) + info['progress'] - info["dist_goal"]
 
         # reward +=  (0.01 * info['progress'] - 0.1 * info['n_collision']) - 0.01 * info['wrong_way'] + 0.01 * (info['lap']-1) - panalty * 0.01 #reward2
         # reward +=  (-0.01 * info['n_collision']) - 0.01 * info['wrong_way'] + 0.01 * (info['lap']-1) - panalty * 0.001 #reward3
