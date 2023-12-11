@@ -45,11 +45,11 @@ class CarRacingTD3Agent(TD3BaseAgent):
 
 		# choose Gaussian noise or OU noise
 
-		# noise_mean = np.full(self.env.action_space.shape[0], 0.0, np.float32)
-		# noise_std = np.full(self.env.action_space.shape[0], 1.0, np.float32)
-		# self.noise = OUNoiseGenerator(noise_mean, noise_std)
+		noise_mean = np.full(self.env.action_space.shape[0], 0.0, np.float32)
+		noise_std = np.full(self.env.action_space.shape[0], 1.0, np.float32)
+		self.noise = OUNoiseGenerator(noise_mean, noise_std)
 
-		self.noise = GaussianNoise(self.env.action_space.shape[0], 0.0, 1.0)
+		# self.noise = GaussianNoise(self.env.action_space.shape[0], 0.0, 1.0)
 		
 	
 	def decide_agent_actions(self, state, sigma=0.0, brake_rate=0.015):
@@ -86,7 +86,8 @@ class CarRacingTD3Agent(TD3BaseAgent):
 		# 	# select min q value from q_next1 and q_next2 (double Q learning)
 			q_target = reward + self.gamma * torch.min(q_next1, q_next2) * (1 - done)
 			# q_target = reward + self.gamma * q_next1 * (1 - done) #B1
-		# critic loss function
+		
+  		# critic loss function
 		criterion = nn.MSELoss()
 		critic_loss1 = criterion(q_value1, q_target)
 		critic_loss2 = criterion(q_value2, q_target)
