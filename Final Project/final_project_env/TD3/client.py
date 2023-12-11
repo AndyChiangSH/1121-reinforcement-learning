@@ -60,7 +60,7 @@ def connect(agent, url: str = 'http://localhost:5000', first_call = 1):
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
-	parser.add_argument('--url', type=str, default='http://localhost:5000', help='The url of the server.')
+	parser.add_argument('--url', type=str, default='/localhost:5000', help='The url of the server.')
 	args = parser.parse_args()
 
 	# Initialize the RL Agent
@@ -80,13 +80,13 @@ if __name__ == '__main__':
 		"update_freq": 2,  # B3
 		"eval_interval": 100,
 		"eval_episode": 5,
-		"logdir": 'TD3/log/TD3-circle-11',
+		"logdir": 'TD3/log/TD3-circle-10',
 		"scenario": "circle_cw_competition_collisionStop"
 	}
 
 	rand_agent = CarRacingTD3Agent(config)
 	# rand_agent.load('/home/bryant/Documents/112_1/rl/final_project/final_project_env/TD3/model_906689_0.pth')
 	rand_agent.load(
-		'TD3/log/TD3-circle-11/model_171324_0.pth')
+		'TD3/log/TD3-circle-10/model_658671_31.pth')
 	
 	connect(rand_agent, url=args.url, first_call=1)
