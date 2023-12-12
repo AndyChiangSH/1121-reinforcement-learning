@@ -111,10 +111,10 @@ class CarRacingEnvironment:
         # TD3-circle-9 reward
         # reward -= panalty
         
-        # TD3-circle-11 reward
-        # if info["wall_collision"]:
-        #     terminates = True
-        #     reward = -100
+        # TD3-circle-13 reward
+        if info["wall_collision"]:
+            terminates = True
+            reward = 0
 
         # reward +=  (0.01 * info['progress'] - 0.1 * info['n_collision']) - 0.01 * info['wrong_way'] + 0.01 * (info['lap']-1) - panalty * 0.01 #reward2
         # reward +=  (-0.01 * info['n_collision']) - 0.01 * info['wrong_way'] + 0.01 * (info['lap']-1) - panalty * 0.001 #reward3
