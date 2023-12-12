@@ -80,13 +80,13 @@ if __name__ == '__main__':
 		"update_freq": 2,  # B3
 		"eval_interval": 100,
 		"eval_episode": 5,
-		"logdir": 'TD3/log/TD3-circle-10',
+		"logdir": 'TD3/log/TD3-circle-12',
 		"scenario": "circle_cw_competition_collisionStop"
 	}
 
 	rand_agent = CarRacingTD3Agent(config)
 	# rand_agent.load('/home/bryant/Documents/112_1/rl/final_project/final_project_env/TD3/model_906689_0.pth')
 	rand_agent.load(
-		'TD3/log/TD3-circle-10/model_658671_31.pth')
+		'TD3/log/TD3-circle-12/model_551542_92.pth')
 	
 	connect(rand_agent, url=args.url, first_call=1)

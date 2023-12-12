@@ -117,8 +117,8 @@ class TD3BaseAgent(ABC):
 				if terminates or truncates:
 					self.writer.add_scalar('Train/Episode Reward', total_reward, self.total_time_step)
 					print(
-						'Step: {}\tEpisode: {}\tLength: {:3d}\tTotal reward: {:.2f}'
-						.format(self.total_time_step, episode+1, t, total_reward))
+						'Episode: {}\tStep: {}\tLength: {:3d}\tTotal reward: {:.2f}'
+						.format(episode+1, self.total_time_step, t, total_reward))
 				
 					break
 			

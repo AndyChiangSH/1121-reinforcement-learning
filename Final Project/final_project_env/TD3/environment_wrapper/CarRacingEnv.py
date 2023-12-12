@@ -13,6 +13,9 @@ import torch.nn as nn
 from torch.utils.tensorboard import SummaryWriter
 from racecar_gym.env import RaceEnv
 
+import gymnasium as gym
+
+
 class CarRacingEnvironment:
     def __init__(self, N_frame=4, test=False, scenario='circle_cw_competition_collisionStop'):
         env = RaceEnv(
@@ -27,7 +30,13 @@ class CarRacingEnvironment:
             # self.env = gym.wrappers.RecordVideo(self.env, 'video_Gousenoise_reward_B4_2')
         else:
             self.env = env
-        self.action_space = self.env.action_space
+            
+        if scenario == 'circle_cw_competition_collisionStop':
+            self.action_space = gym.spaces.box.Box(
+                low=0., high=1., shape=(2,), dtype=float)
+        else:
+            self.action_space = self.env.action_space
+        
         self.observation_space = self.env.observation_space
         self.ep_len = 0
         self.frames = deque(maxlen=N_frame)
@@ -103,9 +112,9 @@ class CarRacingEnvironment:
         # reward -= panalty
         
         # TD3-circle-11 reward
-        if info["wall_collision"]:
-            terminates = True
-            reward = -100
+        # if info["wall_collision"]:
+        #     terminates = True
+        #     reward = -100
 
         # reward +=  (0.01 * info['progress'] - 0.1 * info['n_collision']) - 0.01 * info['wrong_way'] + 0.01 * (info['lap']-1) - panalty * 0.01 #reward2
         # reward +=  (-0.01 * info['n_collision']) - 0.01 * info['wrong_way'] + 0.01 * (info['lap']-1) - panalty * 0.001 #reward3
