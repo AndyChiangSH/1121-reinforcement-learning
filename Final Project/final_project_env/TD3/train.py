@@ -17,8 +17,8 @@ if __name__ == '__main__':
 		"replay_buffer_capacity": 5000,
 		"update_freq": 2, #B3
 		"eval_interval": 100,
-		"eval_episode": 5,
-		"logdir": 'TD3/log/TD3-circle-14',
+		"eval_episode": 10,
+		"logdir": 'TD3/log/TD3-circle-15',
 		"scenario": "circle_cw_competition_collisionStop"
 	}
 

@@ -33,7 +33,7 @@ class CarRacingEnvironment:
             
         if scenario == 'circle_cw_competition_collisionStop':
             self.action_space = gym.spaces.box.Box(
-                low=0., high=1., shape=(2,), dtype=float)
+                low=0.5, high=1., shape=(2,), dtype=float)
         else:
             self.action_space = self.env.action_space
         
@@ -112,11 +112,12 @@ class CarRacingEnvironment:
         # reward -= panalty
         
         # TD3-circle-14 reward
-        if info["wall_collision"]:
-            terminates = True
-            reward = reward * 0.9
+        # if info["wall_collision"]:
+        #     terminates = True
+        #     reward = reward * 0.9
         
-        # reward += info["obstacle"] * 0.1
+        # TD3-circle-15 reward
+        # reward += info["obstacle"] * 0.01
 
         # reward +=  (0.01 * info['progress'] - 0.1 * info['n_collision']) - 0.01 * info['wrong_way'] + 0.01 * (info['lap']-1) - panalty * 0.01 #reward2
         # reward +=  (-0.01 * info['n_collision']) - 0.01 * info['wrong_way'] + 0.01 * (info['lap']-1) - panalty * 0.001 #reward3
