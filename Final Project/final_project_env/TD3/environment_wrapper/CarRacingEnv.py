@@ -33,7 +33,7 @@ class CarRacingEnvironment:
             
         if scenario == 'circle_cw_competition_collisionStop':
             self.action_space = gym.spaces.box.Box(
-                low=0.5, high=0.75, shape=(2,), dtype=float)
+                low=0.5, high=1, shape=(2,), dtype=float)
         else:
             self.action_space = self.env.action_space
         

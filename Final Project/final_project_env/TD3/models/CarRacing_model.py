@@ -42,6 +42,7 @@ class ActorNetSimple(nn.Module):
         h = self.linear(h)
 
         h_clone = h.clone()
+        # h_clone = (h_clone / 4) + 0.75
         # map to valid action space: {steer:[-1, 1], motor:[-1, 1]}
         h_clone[:, 0] = (h_clone[:, 0])
         h_clone[:, 1] = (h_clone[:, 1])
@@ -103,5 +104,6 @@ class CriticNetSimple(nn.Module):
 
         # concat
         h = self.concat_linear(torch.concat((state_h, action_h), dim=1))
-
+        # h = (h / 4) + 0.75
+        
         return h
