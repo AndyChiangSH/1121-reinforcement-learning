@@ -14,6 +14,7 @@ from torch.utils.tensorboard import SummaryWriter
 from racecar_gym.env import RaceEnv
 
 import gymnasium as gym
+from numpy import array, float32
 
 
 class CarRacingEnvironment:
@@ -33,7 +34,7 @@ class CarRacingEnvironment:
             
         if scenario == 'circle_cw_competition_collisionStop':
             self.action_space = gym.spaces.box.Box(
-                low=0.5, high=1, shape=(2,), dtype=float)
+                low=0.5, high=1, shape=(2,), dtype=float32)
         else:
             self.action_space = self.env.action_space
         
