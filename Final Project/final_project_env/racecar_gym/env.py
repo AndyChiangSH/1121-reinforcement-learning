@@ -26,7 +26,9 @@ class RaceEnv(gym.Env):
                  scenario: str,
                  render_mode: str = 'rgb_array_birds_eye',
                  reset_when_collision: bool = True,
+                 test: bool = False,
                  **kwargs):
+        
         self.scenario = scenario.upper()[0] + scenario.lower()[1:]
         self.env_id = f'SingleAgent{self.scenario}-v0'
         self.env = gym.make(id=self.env_id,
@@ -43,12 +45,20 @@ class RaceEnv(gym.Env):
         self.observation_space = gym.spaces.Box(low=0, high=255, shape=(3, 128, 128), dtype=np.uint8)
         #
         self.cur_step = 0
+        self.test = test
 
     def observation_postprocess(self, obs):
         obs = obs[self.camera_name].astype(np.uint8).transpose(2, 0, 1)
         return obs
 
     def reset(self, *args, **kwargs: dict):
+        if not self.test:
+            # random start point
+            if kwargs.get("options"):
+                kwargs["options"]["mode"] = "random"
+            else:
+                kwargs["options"] = {"mode": "random"}
+                
         self.cur_step = 0
         obs, *others = self.env.reset(*args, **kwargs)
         obs = self.observation_postprocess(obs)

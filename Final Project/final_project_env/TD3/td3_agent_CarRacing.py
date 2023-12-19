@@ -60,7 +60,7 @@ class CarRacingTD3Agent(TD3BaseAgent):
 			action = self.actor_net(state, brake_rate).cpu().numpy().squeeze()
 			action += (self.noise.generate() * sigma) #B4
 
-		print("action:", action)
+		# print("action:", action)
 
 		return action
 		

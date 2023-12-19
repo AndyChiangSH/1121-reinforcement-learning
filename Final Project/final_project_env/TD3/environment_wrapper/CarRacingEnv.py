@@ -22,7 +22,8 @@ class CarRacingEnvironment:
         env = RaceEnv(
             scenario=scenario,
             render_mode='rgb_array_birds_eye',
-            reset_when_collision=True if 'austria' in scenario else False
+            reset_when_collision=False if 'collisionStop' in scenario else True,
+            test=test
         )
         
         self.test = test
@@ -138,20 +139,26 @@ class CarRacingEnvironment:
         # convert to grayscale
         # obs = np.transpose(obs, (1, 2, 0))
         obs = cv2.cvtColor(obs, cv2.COLOR_BGR2GRAY) # 96x96
+        
+        # resize image
+        obs = cv2.resize(obs, (64, 64), interpolation=cv2.INTER_AREA)
 
         # save image for debugging
         # filename = "images/image" + str(self.ep_len) + ".jpg"
         # cv2.imwrite(filename, obs)
 
         # frame stacking
+        # print("obs.shape:", obs.shape)
         self.frames.append(obs)
+        # print("obs.shape:", obs.shape)
         obs = np.stack(self.frames, axis=0)
+        # obs = np.transpose(obs, (2, 0, 1))
 
         if self.test:
             # enable this line to recover the original reward
             reward = original_reward
             # enable this line to recover the original terminates signal, disable this to accerlate evaluation
-            # terminates = original_terminates
+            terminates = original_terminates
 
         return obs, reward, terminates, truncates, info
     
@@ -165,6 +172,7 @@ class CarRacingEnvironment:
         # convert to grayscale obs = 128*128*3
         obs = np.transpose(obs, (1, 2, 0))
         obs = cv2.cvtColor(obs, cv2.COLOR_BGR2GRAY) # 96x96
+        obs = cv2.resize(obs, (64, 64), interpolation=cv2.INTER_AREA)
 
         # frame stacking
         for _ in range(self.frames.maxlen):
