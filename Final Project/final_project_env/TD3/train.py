@@ -19,7 +19,7 @@ if __name__ == '__main__':
         "update_freq": 2, #B3
         "eval_interval": 100,
         "eval_episode": 10,
-        "logdir": 'TD3/log/TD3-circle-21',
+        "logdir": 'TD3/log/TD3-circle-22',
         "scenario": "circle_cw_competition_collisionStop"
     }
 
