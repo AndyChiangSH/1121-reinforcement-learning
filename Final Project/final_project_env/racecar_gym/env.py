@@ -46,6 +46,8 @@ class RaceEnv(gym.Env):
         #
         self.cur_step = 0
         self.test = test
+        
+        print("test:", test)
 
     def observation_postprocess(self, obs):
         obs = obs[self.camera_name].astype(np.uint8).transpose(2, 0, 1)

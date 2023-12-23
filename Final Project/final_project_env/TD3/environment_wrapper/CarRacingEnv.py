@@ -19,7 +19,7 @@ from numpy import array, float32
 
 class CarRacingEnvironment:
     def __init__(self, N_frame=4, test=False, scenario='circle_cw_competition_collisionStop'):
-        env = RaceEnv(
+        self.env = RaceEnv(
             scenario=scenario,
             render_mode='rgb_array_birds_eye',
             reset_when_collision=False if 'collisionStop' in scenario else True,
@@ -27,11 +27,11 @@ class CarRacingEnvironment:
         )
         
         self.test = test
-        if self.test:
-            self.env = env
-            # self.env = gym.wrappers.RecordVideo(self.env, 'video_Gousenoise_reward_B4_2')
-        else:
-            self.env = env
+        # if self.test:
+        #     self.env = env
+        #     # self.env = gym.wrappers.RecordVideo(self.env, 'video_Gousenoise_reward_B4_2')
+        # else:
+        #     self.env = env
             
         if scenario == 'circle_cw_competition_collisionStop':
             self.action_space = gym.spaces.box.Box(
@@ -73,6 +73,8 @@ class CarRacingEnvironment:
         road_pixel_count, grass_pixel_count = self.check_car_position(obs)
         info["road_pixel_count"] = road_pixel_count
         info["grass_pixel_count"] = grass_pixel_count
+        
+        # print("reward:", reward)
 
         # my reward shaping strategy, you can try your own
         # if road_pixel_count < 10:
@@ -141,7 +143,7 @@ class CarRacingEnvironment:
         obs = cv2.cvtColor(obs, cv2.COLOR_BGR2GRAY) # 96x96
         
         # resize image
-        obs = cv2.resize(obs, (64, 64), interpolation=cv2.INTER_AREA)
+        obs = cv2.resize(obs, (32, 32), interpolation=cv2.INTER_AREA)
 
         # save image for debugging
         # filename = "images/image" + str(self.ep_len) + ".jpg"
@@ -172,7 +174,7 @@ class CarRacingEnvironment:
         # convert to grayscale obs = 128*128*3
         obs = np.transpose(obs, (1, 2, 0))
         obs = cv2.cvtColor(obs, cv2.COLOR_BGR2GRAY) # 96x96
-        obs = cv2.resize(obs, (64, 64), interpolation=cv2.INTER_AREA)
+        obs = cv2.resize(obs, (32, 32), interpolation=cv2.INTER_AREA)
 
         # frame stacking
         for _ in range(self.frames.maxlen):

@@ -234,9 +234,13 @@ def get_args():
 if __name__ == '__main__':
     get_args()
 
-    env = RaceEnv(scenario=scenario,
-                  render_mode='rgb_array_birds_eye',
-                  reset_when_collision=True if 'austria' in scenario else False)
+    env = RaceEnv(
+        scenario=scenario,
+        render_mode='rgb_array_birds_eye',
+        reset_when_collision=False if 'collisionStop' in scenario else True,
+        test=True
+    )
+    
     obs, info = env.reset()
     #
     app.run(debug=False, host='0.0.0.0', port=port)

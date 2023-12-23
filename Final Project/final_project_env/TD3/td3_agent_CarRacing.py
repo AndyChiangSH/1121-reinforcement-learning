@@ -15,7 +15,6 @@ class CarRacingTD3Agent(TD3BaseAgent):
 			N_frame=4, test=False, scenario=config["scenario"])
 		self.test_env = CarRacingEnvironment(
 			N_frame=4, test=True, scenario=config["scenario"])
-
 		
 		# behavior network
 		self.actor_net = ActorNetSimple(self.env.observation_space.shape[1], self.env.action_space.shape[0], 4)
