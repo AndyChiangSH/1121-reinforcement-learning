@@ -41,6 +41,7 @@ class OUNoiseGenerator:
 
         return self.x
 
+
 class TD3BaseAgent(ABC):
 	def __init__(self, config):
 		self.gpu = config["gpu"]

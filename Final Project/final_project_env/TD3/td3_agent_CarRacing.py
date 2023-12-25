@@ -6,6 +6,8 @@ from .models.CarRacing_model import ActorNetSimple, CriticNetSimple
 from .environment_wrapper.CarRacingEnv import CarRacingEnvironment
 import random
 from .base_agent import OUNoiseGenerator, GaussianNoise
+import time
+
 
 class CarRacingTD3Agent(TD3BaseAgent):
     def __init__(self, config):
@@ -50,47 +52,23 @@ class CarRacingTD3Agent(TD3BaseAgent):
 
         # self.noise = GaussianNoise(self.env.action_space.shape[0], 0.0, 1.0)
         
+        self.scenario = config["scenario"]
+        
     
     def decide_agent_actions(self, state, sigma=0.0, brake_rate=0.015):
         ### TODO ###
         # based on the behavior (actor) network and exploration noise
         with torch.no_grad():
             state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
-        #     action = self.actor_net(state, brake_rate).cpu().numpy().squeeze()
-        #     action += (self.noise.generate() * sigma) #B4
+            action = self.actor_net(state, brake_rate).cpu().numpy().squeeze()
+            # action += (self.noise.generate() * sigma) #B4
+            action = self.my_noise(state, action)
 
-        # # print("action:", action)
+        # print("action:", action)
+        
+        return action
   
-        # # rule-base
-        # # action[0] = 1.0
-  
-        # print("state.shape:", state.shape)
-        obs = state[0][3]
-        # print("obs:", obs)
-
-        left_wall = 0
-        right_wall = 0
-        for i in range(len(obs)):
-            if obs[i][0] >= 140 and obs[i][0] <= 200:
-                left_wall += 1
-                
-            if obs[i][-1] >= 140 and obs[i][-1] <= 200:
-                right_wall += 1
-
-        # print("left_wall:", left_wall)
-        # print("right_wall:", right_wall)
         
-        action = [0.5, 0.18]
-        
-        if left_wall >= len(obs)*0.5:
-            action[1] = 0.28
-            
-        if right_wall >= len(obs)*0.5:
-            action[1] = 0.08
-
-        return np.array(action)
-        
-
     def update_behavior_network(self):
         # sample a minibatch of transitions
         state, action, reward, next_state, done = self.replay_buffer.sample(self.batch_size, self.device)
@@ -142,4 +120,90 @@ class CarRacingTD3Agent(TD3BaseAgent):
             self.actor_net.zero_grad()
             actor_loss.backward()
             self.actor_opt.step()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
+    def my_noise(self, state, action):
+        # print("state.shape:", state.shape)
+        obs = state[0][3]
+        # print("obs:", obs)
+
+        left_wall = 0
+        right_wall = 0
+        for i in range(len(obs)):
+            if obs[i][0] >= 140 and obs[i][0] <= 200:
+                left_wall += 1
+
+            if obs[i][-1] >= 140 and obs[i][-1] <= 200:
+                right_wall += 1
+
+        # print("left_wall:", left_wall)
+        # print("right_wall:", right_wall)
+
+        if self.scenario == "circle_cw_competition_collisionStop":
+            action = [1.0, 0.15]
+
+            if left_wall >= len(obs)*0.5:
+                action = [1.0, 0.3]
+
+            if right_wall >= len(obs)*0.5:
+                action = [1.0, 0.0]
+        elif self.scenario == "austria_competition":
+            action = [0.2, 0.0]
+
+            if left_wall >= len(obs)*0.4:
+                action = [0.1, 0.75]
+            elif left_wall >= len(obs)*0.6:
+                action = [0.05, 1.0]
+
+            if right_wall >= len(obs)*0.4:
+                action = [0.1, -0.75]
+            elif right_wall >= len(obs)*0.6:
+                action = [0.05, -1.0]
+
+        # demo not command
+        time.sleep(0.1)
+
+        return np.array(action)
