@@ -91,6 +91,6 @@ if __name__ == '__main__':
 
     rand_agent = CarRacingTD3Agent(config)
     rand_agent.load(
-        'TD3/log/TD3-austria-1/model_9011_5.pth')
+        'TD3/log/TD3-austria-1/model_219754_40.pth')
     
     connect(rand_agent, url=args.url, first_call=1)
