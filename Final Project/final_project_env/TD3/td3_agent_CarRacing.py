@@ -60,15 +60,24 @@ class CarRacingTD3Agent(TD3BaseAgent):
         
         self.scenario = config["scenario"]
         
+        self.right_count = 0
+        self.left_count = 0
+        self.straight_count = 0
+        self.action_state = "S"
+        
     
     def decide_agent_actions(self, state, sigma=0.0, brake_rate=0.015):
         ### TODO ###
         # based on the behavior (actor) network and exploration noise
+        action = [0.0, 0.0]
+        # pre_action = [0.1, 0]
+        # count = 0
         with torch.no_grad():
             state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
-            action = self.actor_net(state, brake_rate).cpu().numpy().squeeze()
+            # action = self.actor_net(state, brake_rate).cpu().numpy().squeeze()
             # action += (self.noise.generate() * sigma) #B4
-            action = self.my_noise_2(state, action)
+            action = self.my_noise_3(state, action)
+            # pre_action = action
 
         # print("action:", action)
         
@@ -222,3 +231,65 @@ class CarRacingTD3Agent(TD3BaseAgent):
         # time.sleep(0.1)
 
         return np.array(action)
+
+
+    def my_noise_3(self, state, action):
+        # print("state.shape:", state.shape)
+        obs = state[0][3]
+        # print("obs:", obs)
+
+        left_wall = 0
+        right_wall = 0
+        for i in range(len(obs)):
+            if obs[i][0] >= 140 and obs[i][0] <= 200:
+                left_wall += 1
+
+            if obs[i][-1] >= 140 and obs[i][-1] <= 200:
+                right_wall += 1
+
+        # print("left_wall:", left_wall)
+        # print("right_wall:", right_wall)
+
+        if self.scenario == "circle_cw_competition_collisionStop":
+            if left_wall > right_wall:
+                action = [0.1, min(1, left_wall/right_wall)]
+            elif right_wall > left_wall:
+                action = [0.1, -min(1, right_wall/left_wall)]
+            else:
+                action = [0.2, 0.0]
+        elif self.scenario == "austria_competition":
+            if left_wall - right_wall > 4:      # right
+                self.right_count += 1
+                self.left_count = 0
+                self.straight_count = 0
+            elif right_wall - left_wall > 4:    # left
+                self.right_count = 0
+                self.left_count += 1
+                self.straight_count = 0
+            else:   # straight
+                self.right_count = 0
+                self.left_count = 0
+                self.straight_count += 1
+            
+            if self.right_count >= 1:
+                self.action_state = "R"
+            if self.left_count >= 2:
+                self.action_state = "L"
+            if self.straight_count >= 4:
+                self.action_state = "S"
+
+            if self.action_state == "R":
+                action = [0.01, 1.0]
+            if self.action_state == "L":
+                action = [0.01, -1.0]
+            if self.action_state == "S":
+                action = [0.1, 0.0]
+                
+            print("action_state:", self.action_state)
+
+        # demo not command
+        # time.sleep(0.1)
+
+        return np.array(action)
+
+
