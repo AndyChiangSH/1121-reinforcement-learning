@@ -25,7 +25,7 @@ def connect(agent, url: str = 'http://localhost:5000', first_call = 1):
         # print(obs.shape)
         obs = cv2.cvtColor(obs, cv2.COLOR_BGR2GRAY)
         # print(obs.shape)
-        obs = cv2.resize(obs, (32, 32), interpolation=cv2.INTER_AREA)
+        # obs = cv2.resize(obs, (32, 32), interpolation=cv2.INTER_AREA)
 
 
         if first_call == 1:
@@ -82,15 +82,16 @@ if __name__ == '__main__':
         "lra": 4.5e-5,  # 4.5e-5, 7
         "lrc": 4.5e-5,  # 4.5e-5, 7
         "replay_buffer_capacity": 5000,
-        "update_freq": 2, #B3
-        "eval_interval": 100,
-        "eval_episode": 10,
-        "logdir": 'TD3/log/TD3-austria-1',
-        "scenario": "austria_competition"
+        "update_freq": 2,  # B3
+        "eval_interval": 10,
+        "eval_episode": 5,
+        "logdir": 'TD3/log/TD3-austria-2',
+        "scenario": "austria_competition",
+        "obs_size": 128,
     }
 
     rand_agent = CarRacingTD3Agent(config)
     rand_agent.load(
-        'TD3/log/TD3-austria-1/model_219754_40.pth')
+        'TD3/log/TD3-austria-2/model_10924_32.pth')
     
     connect(rand_agent, url=args.url, first_call=1)

@@ -19,16 +19,22 @@ class CarRacingTD3Agent(TD3BaseAgent):
             N_frame=4, test=True, scenario=config["scenario"])
         
         # behavior network
-        self.actor_net = ActorNetSimple(self.env.observation_space.shape[1], self.env.action_space.shape[0], 4)
-        self.critic_net1 = CriticNetSimple(self.env.observation_space.shape[1], self.env.action_space.shape[0], 4)
-        self.critic_net2 = CriticNetSimple(self.env.observation_space.shape[1], self.env.action_space.shape[0], 4)
+        self.actor_net = ActorNetSimple(
+            config["obs_size"], self.env.action_space.shape[0], 4)
+        self.critic_net1 = CriticNetSimple(
+            config["obs_size"], self.env.action_space.shape[0], 4)
+        self.critic_net2 = CriticNetSimple(
+            config["obs_size"], self.env.action_space.shape[0], 4)
         self.actor_net.to(self.device)
         self.critic_net1.to(self.device)
         self.critic_net2.to(self.device)
         # target network
-        self.target_actor_net = ActorNetSimple(self.env.observation_space.shape[1], self.env.action_space.shape[0], 4)
-        self.target_critic_net1 = CriticNetSimple(self.env.observation_space.shape[1], self.env.action_space.shape[0], 4)
-        self.target_critic_net2 = CriticNetSimple(self.env.observation_space.shape[1], self.env.action_space.shape[0], 4)
+        self.target_actor_net = ActorNetSimple(
+            config["obs_size"], self.env.action_space.shape[0], 4)
+        self.target_critic_net1 = CriticNetSimple(
+            config["obs_size"], self.env.action_space.shape[0], 4)
+        self.target_critic_net2 = CriticNetSimple(
+            config["obs_size"], self.env.action_space.shape[0], 4)
         self.target_actor_net.to(self.device)
         self.target_critic_net1.to(self.device)
         self.target_critic_net2.to(self.device)
@@ -62,7 +68,7 @@ class CarRacingTD3Agent(TD3BaseAgent):
             state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
             action = self.actor_net(state, brake_rate).cpu().numpy().squeeze()
             # action += (self.noise.generate() * sigma) #B4
-            action = self.my_noise(state, action)
+            action = self.my_noise_2(state, action)
 
         # print("action:", action)
         
@@ -121,51 +127,8 @@ class CarRacingTD3Agent(TD3BaseAgent):
             actor_loss.backward()
             self.actor_opt.step()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         
-    def my_noise(self, state, action):
+    def my_noise_1(self, state, action):
         # print("state.shape:", state.shape)
         obs = state[0][3]
         # print("obs:", obs)
@@ -204,6 +167,58 @@ class CarRacingTD3Agent(TD3BaseAgent):
                 action = [0.05, -1.0]
 
         # demo not command
-        time.sleep(0.1)
+        # time.sleep(0.1)
+
+        return np.array(action)
+
+
+    def my_noise_2(self, state, action):
+        # print("state.shape:", state.shape)
+        obs = state[0][3]
+        # print("obs:", obs)
+
+        left_wall = 0
+        right_wall = 0
+        for i in range(len(obs)):
+            if obs[i][0] >= 140 and obs[i][0] <= 200:
+                left_wall += 1
+
+            if obs[i][-1] >= 140 and obs[i][-1] <= 200:
+                right_wall += 1
+
+        # print("left_wall:", left_wall)
+        # print("right_wall:", right_wall)
+
+        if self.scenario == "circle_cw_competition_collisionStop":
+            if left_wall > right_wall:
+                action = [0.1, min(1, left_wall/right_wall)]
+            elif right_wall > left_wall:
+                action = [0.1, -min(1, right_wall/left_wall)]
+            else:
+                action = [0.2, 0.0]
+        elif self.scenario == "austria_competition":
+            # if left_wall > right_wall:
+            #     action = [0.05, min(1, ((left_wall/right_wall)-1)*1.0)]
+            # elif right_wall > left_wall:
+            #     action = [0.05, -min(1, ((right_wall/left_wall)-1)*1.0)]
+            # else:
+            #     action = [0.1, 0.0]
+            
+            # if left_wall > right_wall:
+            #     action = [0.01, 1]
+            # elif right_wall > left_wall:
+            #     action = [0.01, -1]
+            # else:
+            #     action = [0.1, 0.0]
+                
+            if left_wall - right_wall > 4:
+                action = [0.01, 1.0]
+            elif right_wall - left_wall > 4:
+                action = [0.01, -1.0]
+            else:
+                action = [0.1, 0.0]
+
+        # demo not command
+        # time.sleep(0.1)
 
         return np.array(action)

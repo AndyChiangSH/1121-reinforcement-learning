@@ -24,7 +24,7 @@ class ActorNetSimple(nn.Module):
         )
 
         self.linear = nn.Sequential(
-            nn.Linear(256, 256),
+            nn.Linear(16*(state_dim//8)**2, 256),
             nn.LayerNorm(256),
             nn.ELU(),
             nn.Linear(256, action_dim),
@@ -77,7 +77,7 @@ class CriticNetSimple(nn.Module):
         )
 
         self.state_linear = nn.Sequential(
-            nn.Linear(256, 256),
+            nn.Linear(16*(state_dim//8)**2, 256),
             nn.LayerNorm(256),
             nn.ELU(),
         )
