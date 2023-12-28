@@ -65,18 +65,26 @@ class CarRacingTD3Agent(TD3BaseAgent):
         self.straight_count = 0
         self.action_state = "S"
         
+        
+    def warmup_action(self, state):
+        action = [0.0, 0.0]
+        state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
+        action = self.my_noise_2(state, action)
+        
+        return action
+
     
     def decide_agent_actions(self, state, sigma=0.0, brake_rate=0.015):
         ### TODO ###
         # based on the behavior (actor) network and exploration noise
-        action = [0.0, 0.0]
+        # action = [0.0, 0.0]
         # pre_action = [0.1, 0]
         # count = 0
         with torch.no_grad():
             state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
-            # action = self.actor_net(state, brake_rate).cpu().numpy().squeeze()
-            # action += (self.noise.generate() * sigma) #B4
-            action = self.my_noise_3(state, action)
+            action = self.actor_net(state, brake_rate).cpu().numpy().squeeze()
+            action += (self.noise.generate() * sigma) #B4
+            # action = self.my_noise_2(state, action)
             # pre_action = action
 
         # print("action:", action)

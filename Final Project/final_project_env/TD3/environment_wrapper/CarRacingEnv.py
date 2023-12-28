@@ -116,9 +116,9 @@ class CarRacingEnvironment:
         # reward -= panalty
         
         # TD3-circle-14 reward
-        if info["wall_collision"]:
-            terminates = True
-            reward = 0
+        # if info["wall_collision"]:
+        #     terminates = True
+        #     reward = 0
         
         # TD3-circle-15 reward
         # reward += info["obstacle"] * 0.01

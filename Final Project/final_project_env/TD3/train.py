@@ -5,25 +5,6 @@ import json
 # os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 if __name__ == '__main__':
     # my hyperparameters, you can change it as you like
-    config = {
-        "gpu": True,
-        "training_steps": 1e8,
-        "gamma": 0.99,
-        "tau": 0.005,
-        "batch_size": 32,
-        "warmup_steps": 500,
-        "total_episode": 100000,
-        "lra": 4.5e-5,  # 4.5e-5, 7
-        "lrc": 4.5e-5,  # 4.5e-5, 7
-        "replay_buffer_capacity": 5000,
-        "update_freq": 2, #B3
-        "eval_interval": 10,
-        "eval_episode": 10,
-        "logdir": 'TD3/log/TD3-circle-24',
-        "scenario": "circle_cw_competition_collisionStop",
-        "obs_size": 128,
-    }
-
     # config = {
     #     "gpu": True,
     #     "training_steps": 1e8,
@@ -35,13 +16,32 @@ if __name__ == '__main__':
     #     "lra": 4.5e-5,  # 4.5e-5, 7
     #     "lrc": 4.5e-5,  # 4.5e-5, 7
     #     "replay_buffer_capacity": 5000,
-    #     "update_freq": 2,  # B3
+    #     "update_freq": 2, #B3
     #     "eval_interval": 10,
     #     "eval_episode": 10,
-    #     "logdir": 'TD3/log/TD3-austria-2',
-    #     "scenario": "austria_competition",
+    #     "logdir": 'TD3/log/TD3-circle-24',
+    #     "scenario": "circle_cw_competition_collisionStop",
     #     "obs_size": 128,
     # }
+
+    config = {
+        "gpu": True,
+        "training_steps": 1e8,
+        "total_episode": 100000,
+        "gamma": 0.99,
+        "tau": 0.005,
+        "batch_size": 32,
+        "warmup_steps": 10000,
+        "lra": 4.5e-5,  # 4.5e-5, 7
+        "lrc": 4.5e-5,  # 4.5e-5, 7
+        "replay_buffer_capacity": 100000,
+        "update_freq": 2,  # B3
+        "eval_interval": 100,
+        "eval_episode": 10,
+        "logdir": 'TD3/log/TD3-austria-4',
+        "scenario": "austria_competition",
+        "obs_size": 128,
+    }
 
     print(f"Start training {config['logdir']}...")
     output_folder_path = config['logdir']
