@@ -137,8 +137,37 @@ class CarRacingTD3Agent(TD3BaseAgent):
             # select action a from behavior actor network (a is different from sample transition's action)
             # get Q from behavior critic network, mean Q value -> objective function
             # maximize (objective function) = minimize -1 * (objective function)
+            # print("state:", state.shape)
+            
             action = self.actor_net(state)
-            actor_loss = -1 * self.critic_net1(state, action).mean() #???
+            
+            rule_action = []
+            for i in range(state.shape[0]):
+                rule_action.append(self.my_noise_2(state[i].unsqueeze(0), action))
+            rule_action = torch.FloatTensor(np.array(rule_action))
+            
+            # print("action:", action.shape)
+            # print("rule_action:", rule_action.shape)
+            
+            critic_loss = self.critic_net1(state, action).mean()
+            rule_loss = criterion(action.to(self.device),
+                                  rule_action.to(self.device))
+            
+
+            # print("rule_loss:", rule_loss)
+            # print("critic_loss:", critic_loss)
+            
+            # rule_loss: smaller better
+            # critic_loss: larger better
+            actor_loss = rule_loss - critic_loss
+            
+            self.writer.add_scalar('Train/critic_loss',
+                                   critic_loss, self.total_time_step)
+            self.writer.add_scalar('Train/rule_loss',
+                                   rule_loss, self.total_time_step)
+            self.writer.add_scalar('Train/actor_loss',
+                                   actor_loss, self.total_time_step)
+
             # optimize actor
             self.actor_net.zero_grad()
             actor_loss.backward()
@@ -190,9 +219,9 @@ class CarRacingTD3Agent(TD3BaseAgent):
 
 
     def my_noise_2(self, state, action):
-        # print("state.shape:", state.shape)
+        # print("state:", state.shape)
         obs = state[0][3]
-        # print("obs:", obs)
+        # print("obs:", obs.shape)
 
         left_wall = 0
         right_wall = 0

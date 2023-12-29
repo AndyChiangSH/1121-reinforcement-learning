@@ -105,9 +105,9 @@ class TD3BaseAgent(ABC):
                     action = self.warmup_action(state)
                 else:
                     # exploration degree
-                    # sigma = max(0.1*(1-episode/self.total_episode), 0.01)
-                    # action = self.decide_agent_actions(state, sigma=sigma)
-                    action = self.warmup_action(state)
+                    sigma = max(0.1*(1-episode/self.total_episode), 0.01)
+                    action = self.decide_agent_actions(state, sigma=sigma)
+                    # action = self.warmup_action(state)
                 
                 next_state, reward, terminates, truncates, _ = self.env.step(action)
                 self.replay_buffer.append(state, action, [reward/10], next_state, [int(terminates)])

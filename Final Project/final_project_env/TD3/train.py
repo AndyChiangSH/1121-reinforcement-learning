@@ -38,7 +38,7 @@ if __name__ == '__main__':
         "update_freq": 2,  # B3
         "eval_interval": 10,
         "eval_episode": 1,
-        "logdir": 'TD3/log/TD3-austria-5',
+        "logdir": 'TD3/log/TD3-austria-6',
         "scenario": "austria_competition",
         "obs_size": 128,
     }
