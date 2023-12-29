@@ -85,13 +85,13 @@ if __name__ == '__main__':
         "update_freq": 2,  # B3
         "eval_interval": 10,
         "eval_episode": 5,
-        "logdir": 'TD3/log/TD3-austria-3',
+        "logdir": 'TD3/log/TD3-austria-5',
         "scenario": "austria_competition",
         "obs_size": 128,
     }
 
     rand_agent = CarRacingTD3Agent(config)
     rand_agent.load(
-        'TD3/log/TD3-austria-3/model_10924_32.pth')
+        'TD3/log/TD3-austria-5/model_1494685_9.pth')
     
     connect(rand_agent, url=args.url, first_call=1)

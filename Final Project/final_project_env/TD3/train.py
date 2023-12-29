@@ -31,14 +31,14 @@ if __name__ == '__main__':
         "gamma": 0.99,
         "tau": 0.005,
         "batch_size": 32,
-        "warmup_steps": 10000,
+        "warmup_steps": 1000,
         "lra": 4.5e-5,  # 4.5e-5, 7
         "lrc": 4.5e-5,  # 4.5e-5, 7
-        "replay_buffer_capacity": 100000,
+        "replay_buffer_capacity": 10000,
         "update_freq": 2,  # B3
-        "eval_interval": 100,
-        "eval_episode": 10,
-        "logdir": 'TD3/log/TD3-austria-4',
+        "eval_interval": 10,
+        "eval_episode": 1,
+        "logdir": 'TD3/log/TD3-austria-5',
         "scenario": "austria_competition",
         "obs_size": 128,
     }

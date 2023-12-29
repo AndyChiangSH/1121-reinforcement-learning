@@ -105,8 +105,9 @@ class TD3BaseAgent(ABC):
                     action = self.warmup_action(state)
                 else:
                     # exploration degree
-                    sigma = max(0.1*(1-episode/self.total_episode), 0.01)
-                    action = self.decide_agent_actions(state, sigma=sigma)
+                    # sigma = max(0.1*(1-episode/self.total_episode), 0.01)
+                    # action = self.decide_agent_actions(state, sigma=sigma)
+                    action = self.warmup_action(state)
                 
                 next_state, reward, terminates, truncates, _ = self.env.step(action)
                 self.replay_buffer.append(state, action, [reward/10], next_state, [int(terminates)])
@@ -130,6 +131,7 @@ class TD3BaseAgent(ABC):
                 avg_score = self.evaluate()
                 self.save(os.path.join(self.writer.log_dir, f"model_{self.total_time_step}_{int(avg_score*100)}.pth"))
                 self.writer.add_scalar('Evaluate/Episode Reward', avg_score, self.total_time_step)
+
 
     def evaluate(self):
         print("==============================================")
