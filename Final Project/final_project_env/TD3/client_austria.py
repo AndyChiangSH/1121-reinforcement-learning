@@ -74,24 +74,24 @@ if __name__ == '__main__':
     config = {
         "gpu": True,
         "training_steps": 1e8,
+        "total_episode": 100000,
         "gamma": 0.99,
         "tau": 0.005,
         "batch_size": 32,
-        "warmup_steps": 500,
-        "total_episode": 100000,
+        "warmup_steps": 1000,
         "lra": 4.5e-5,  # 4.5e-5, 7
         "lrc": 4.5e-5,  # 4.5e-5, 7
-        "replay_buffer_capacity": 5000,
+        "replay_buffer_capacity": 10000,
         "update_freq": 2,  # B3
         "eval_interval": 10,
-        "eval_episode": 5,
-        "logdir": 'TD3/log/TD3-austria-5',
+        "eval_episode": 1,
+        "logdir": 'TD3/log/TD3-austria-6',
         "scenario": "austria_competition",
         "obs_size": 128,
     }
 
     rand_agent = CarRacingTD3Agent(config)
     rand_agent.load(
-        'TD3/log/TD3-austria-5/model_1494685_9.pth')
+        'TD3/log/TD3-austria-6/model_918543_64.pth')
     
     connect(rand_agent, url=args.url, first_call=1)
