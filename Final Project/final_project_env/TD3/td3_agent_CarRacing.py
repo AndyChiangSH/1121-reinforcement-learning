@@ -84,7 +84,7 @@ class CarRacingTD3Agent(TD3BaseAgent):
             state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
             action = self.actor_net(state, brake_rate).cpu().numpy().squeeze()
             action += (self.noise.generate() * sigma) #B4
-            action = self.my_noise_2(state, action)
+            # action = self.my_noise_2(state, action)
             # pre_action = action
 
         # print("action:", action)
@@ -153,7 +153,6 @@ class CarRacingTD3Agent(TD3BaseAgent):
             rule_loss = criterion(action.to(self.device),
                                   rule_action.to(self.device))
             
-
             # print("rule_loss:", rule_loss)
             # print("critic_loss:", critic_loss)
             
