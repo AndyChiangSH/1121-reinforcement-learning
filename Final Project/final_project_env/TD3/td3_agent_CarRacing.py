@@ -84,7 +84,7 @@ class CarRacingTD3Agent(TD3BaseAgent):
             state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
             action = self.actor_net(state, brake_rate).cpu().numpy().squeeze()
             action += (self.noise.generate() * sigma) #B4
-            # action = self.my_noise_2(state, action)
+            action = self.my_noise_2(state, action)
             # pre_action = action
 
         # print("action:", action)
@@ -264,7 +264,7 @@ class CarRacingTD3Agent(TD3BaseAgent):
                 action = [0.1, 0.0]
 
         # demo not command
-        # time.sleep(0.1)
+        time.sleep(0.05)
 
         return np.array(action)
 

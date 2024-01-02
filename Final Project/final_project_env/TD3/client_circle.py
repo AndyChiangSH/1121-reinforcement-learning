@@ -49,7 +49,7 @@ def connect(agent, url: str = 'http://localhost:5000', first_call = 1):
             break
 
         result = json.loads(response.text)
-        # print("result:", result)
+        print("result:", result)
         
         terminal = result['terminal']
 
@@ -77,21 +77,21 @@ if __name__ == '__main__':
         "gamma": 0.99,
         "tau": 0.005,
         "batch_size": 32,
-        "warmup_steps": 500,
+        "warmup_steps": 1000,
         "total_episode": 100000,
         "lra": 4.5e-05,
         "lrc": 4.5e-05,
-        "replay_buffer_capacity": 5000,
+        "replay_buffer_capacity": 10000,
         "update_freq": 2,
-        "eval_interval": 10,
-        "eval_episode": 10,
-        "logdir": "TD3/log/TD3-circle-25",
+        "eval_interval": 50,
+        "eval_episode": 5,
+        "logdir": "TD3/log/TD3-circle-26",
         "scenario": "circle_cw_competition_collisionStop",
         "obs_size": 128
     }
 
     rand_agent = CarRacingTD3Agent(config)
     rand_agent.load(
-        'TD3/log/TD3-circle-25/model_4231_223.pth')
+        'TD3/log/TD3-austria-2/model_10924_32.pth')
     
     connect(rand_agent, url=args.url, first_call=1)
