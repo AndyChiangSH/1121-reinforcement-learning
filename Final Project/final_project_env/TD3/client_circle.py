@@ -73,25 +73,25 @@ if __name__ == '__main__':
     # my hyperparameters, you can change it as you like
     config = {
         "gpu": True,
-        "training_steps": 1e8,
+        "training_steps": 100000000.0,
         "gamma": 0.99,
         "tau": 0.005,
         "batch_size": 32,
         "warmup_steps": 500,
         "total_episode": 100000,
-        "lra": 4.5e-5,  # 4.5e-5, 7
-        "lrc": 4.5e-5,  # 4.5e-5, 7
+        "lra": 4.5e-05,
+        "lrc": 4.5e-05,
         "replay_buffer_capacity": 5000,
-        "update_freq": 2,  # B3
+        "update_freq": 2,
         "eval_interval": 10,
         "eval_episode": 10,
-        "logdir": 'TD3/log/TD3-circle-24',
+        "logdir": "TD3/log/TD3-circle-25",
         "scenario": "circle_cw_competition_collisionStop",
-        "obs_size": 128,
+        "obs_size": 128
     }
 
     rand_agent = CarRacingTD3Agent(config)
     rand_agent.load(
-        'TD3/log/TD3-circle-24/model_4231_223.pth')
+        'TD3/log/TD3-circle-25/model_4231_223.pth')
     
     connect(rand_agent, url=args.url, first_call=1)

@@ -84,7 +84,7 @@ class CarRacingTD3Agent(TD3BaseAgent):
             state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
             action = self.actor_net(state, brake_rate).cpu().numpy().squeeze()
             action += (self.noise.generate() * sigma) #B4
-            # action = self.my_noise_2(state, action)
+            action = self.my_noise_2(state, action)
             # pre_action = action
 
         # print("action:", action)
@@ -236,12 +236,12 @@ class CarRacingTD3Agent(TD3BaseAgent):
         # print("right_wall:", right_wall)
 
         if self.scenario == "circle_cw_competition_collisionStop":
-            if left_wall > right_wall:
-                action = [0.1, min(1, left_wall/right_wall)]
-            elif right_wall > left_wall:
-                action = [0.1, -min(1, right_wall/left_wall)]
+            if left_wall - right_wall > 4:
+                action = [1.0, 0.3]
+            elif right_wall - left_wall > 4:
+                action = [1.0, 0.0]
             else:
-                action = [0.2, 0.0]
+                action = [1.0, 0.15]
         elif self.scenario == "austria_competition":
             # if left_wall > right_wall:
             #     action = [0.05, min(1, ((left_wall/right_wall)-1)*1.0)]
