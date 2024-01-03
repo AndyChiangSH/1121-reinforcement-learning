@@ -54,12 +54,12 @@ class RaceEnv(gym.Env):
         return obs
 
     def reset(self, *args, **kwargs: dict):
-        if not self.test:
-            # random start point
-            if kwargs.get("options"):
-                kwargs["options"]["mode"] = "random"
-            else:
-                kwargs["options"] = {"mode": "random"}
+        # if not self.test:
+        #     # random start point
+        #     if kwargs.get("options"):
+        #         kwargs["options"]["mode"] = "random"
+        #     else:
+        #         kwargs["options"] = {"mode": "random"}
                 
         self.cur_step = 0
         obs, *others = self.env.reset(*args, **kwargs)

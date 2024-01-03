@@ -11,6 +11,7 @@ from collections import deque
 frames = deque(maxlen=4)
 
 def connect(agent, url: str = 'http://localhost:5000', first_call = 1):
+    step = 1
     while True:
         # Get the observation
         response = requests.get(f'{url}')
@@ -49,7 +50,9 @@ def connect(agent, url: str = 'http://localhost:5000', first_call = 1):
             break
 
         result = json.loads(response.text)
-        print("result:", result)
+        # print("result:", result)
+        print("Step:", step)
+        step += 1
         
         terminal = result['terminal']
 
@@ -85,13 +88,13 @@ if __name__ == '__main__':
         "update_freq": 2,
         "eval_interval": 50,
         "eval_episode": 5,
-        "logdir": "TD3/log/TD3-circle-26",
+        "logdir": "TD3/log/TD3-circle-27",
         "scenario": "circle_cw_competition_collisionStop",
         "obs_size": 128
     }
 
     rand_agent = CarRacingTD3Agent(config)
     rand_agent.load(
-        'TD3/log/TD3-austria-2/model_10924_32.pth')
+        'TD3/log/TD3-circle-27/model_398568_62.pth')
     
     connect(rand_agent, url=args.url, first_call=1)
