@@ -82,12 +82,14 @@ class CarRacingTD3Agent(TD3BaseAgent):
         # count = 0
         with torch.no_grad():
             state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
-            action = self.actor_net(state, brake_rate).cpu().numpy().squeeze()
-            action += (self.noise.generate() * sigma) #B4
+            # action = self.actor_net(state, brake_rate).cpu().numpy().squeeze()
+            # action += (self.noise.generate() * sigma) #B4
             # action = self.my_noise_2(state, action)
             # pre_action = action
+            
+            action = self.my_noise_4(state)
 
-        # print("action:", action)
+        print("action:", action)
         
         return action
   
@@ -149,7 +151,7 @@ class CarRacingTD3Agent(TD3BaseAgent):
             # print("action:", action.shape)
             # print("rule_action:", rule_action.shape)
             
-            critic_loss = self.critic_net1(state, action).mean()
+            # critic_loss = self.critic_net1(state, action).mean()
             rule_loss = criterion(action.to(self.device),
                                   rule_action.to(self.device))
             
@@ -158,12 +160,13 @@ class CarRacingTD3Agent(TD3BaseAgent):
             
             # rule_loss: smaller better
             # critic_loss: larger better
-            actor_loss = rule_loss - critic_loss
+            # actor_loss = rule_loss - critic_loss
+            actor_loss = rule_loss
             
-            self.writer.add_scalar('Train/critic_loss',
-                                   critic_loss, self.total_time_step)
-            self.writer.add_scalar('Train/rule_loss',
-                                   rule_loss, self.total_time_step)
+            # self.writer.add_scalar('Train/critic_loss',
+            #                        critic_loss, self.total_time_step)
+            # self.writer.add_scalar('Train/rule_loss',
+            #                        rule_loss, self.total_time_step)
             self.writer.add_scalar('Train/actor_loss',
                                    actor_loss, self.total_time_step)
 
@@ -171,50 +174,6 @@ class CarRacingTD3Agent(TD3BaseAgent):
             self.actor_net.zero_grad()
             actor_loss.backward()
             self.actor_opt.step()
-
-        
-    def my_noise_1(self, state, action):
-        # print("state.shape:", state.shape)
-        obs = state[0][3]
-        # print("obs:", obs)
-
-        left_wall = 0
-        right_wall = 0
-        for i in range(len(obs)):
-            if obs[i][0] >= 140 and obs[i][0] <= 200:
-                left_wall += 1
-
-            if obs[i][-1] >= 140 and obs[i][-1] <= 200:
-                right_wall += 1
-
-        # print("left_wall:", left_wall)
-        # print("right_wall:", right_wall)
-
-        if self.scenario == "circle_cw_competition_collisionStop":
-            action = [1.0, 0.15]
-
-            if left_wall >= len(obs)*0.5:
-                action = [1.0, 0.3]
-
-            if right_wall >= len(obs)*0.5:
-                action = [1.0, 0.0]
-        elif self.scenario == "austria_competition":
-            action = [0.2, 0.0]
-
-            if left_wall >= len(obs)*0.4:
-                action = [0.1, 0.75]
-            elif left_wall >= len(obs)*0.6:
-                action = [0.05, 1.0]
-
-            if right_wall >= len(obs)*0.4:
-                action = [0.1, -0.75]
-            elif right_wall >= len(obs)*0.6:
-                action = [0.05, -1.0]
-
-        # demo not command
-        # time.sleep(0.1)
-
-        return np.array(action)
 
 
     def my_noise_2(self, state, action):
@@ -242,6 +201,13 @@ class CarRacingTD3Agent(TD3BaseAgent):
             else:
                 action = [1.0, 0.15]
         elif self.scenario == "austria_competition":
+            if left_wall - right_wall > 4:
+                action = [0.01, 1.0]
+            elif right_wall - left_wall > 4:
+                action = [0.01, -1.0]
+            else:
+                action = [0.1, 0.0]
+            
             # if left_wall > right_wall:
             #     action = [0.05, min(1, ((left_wall/right_wall)-1)*1.0)]
             # elif right_wall > left_wall:
@@ -256,12 +222,6 @@ class CarRacingTD3Agent(TD3BaseAgent):
             # else:
             #     action = [0.1, 0.0]
                 
-            if left_wall - right_wall > 4:
-                action = [0.01, 1.0]
-            elif right_wall - left_wall > 4:
-                action = [0.01, -1.0]
-            else:
-                action = [0.1, 0.0]
 
         # demo not command
         # time.sleep(0.05)
@@ -329,3 +289,84 @@ class CarRacingTD3Agent(TD3BaseAgent):
         return np.array(action)
 
 
+    def my_noise_4(self, observation):
+        ### TODO ###
+        # add batch dimension in observation
+        # get action, value, logp from net
+
+        # if eval:
+        # 	with torch.no_grad():
+        # 		???, ???, ???, _ = self.net(observation, eval=True)
+        # else:
+        # 	???, ???, ???, _ = self.net(observation)
+
+        # observation = torch.from_numpy(observation)
+        # observation = observation.to(self.device, dtype=torch.float32)
+        # if eval:
+        # 	with torch.no_grad():
+        # 		action, logp_pi, value, _ = self.net(observation, eval=True)
+        # else:
+        # 	action, logp_pi, value, _ = self.net(observation)
+        value = 0
+        logp_pi = 0
+
+        rule_obs = observation[0][3]
+        flag = 0
+        white_0 = 0
+        white_1 = 83
+        row = 22
+        for pix in range(84):
+            if flag == 0:
+                if rule_obs[row][pix] == 255:
+                    white_0 = pix
+                    flag = 1
+            else:
+                if rule_obs[row][pix] != 255:
+                    white_1 = pix
+                    break
+        
+        mid_diff = (white_0+white_1)/2 - 41
+        # breakk = np.random.randint(30)/10000
+
+        is_cir = 0
+        thres = 5  # 5
+
+        if self.scenario == "circle_cw_competition_collisionStop":
+            if mid_diff < 0:
+                action = [1.0, -0.18]
+            elif mid_diff > 15:
+                action = [1.0, 0.54]
+            else:
+                action = [1.0, 0.18]
+        elif self.scenario == "austria_competition":
+            if mid_diff < thres:
+                # if mid_diff < -10:action = [0.001,-1]
+                # else:action = [0.1,-0.2]
+                if mid_diff < -10:
+                    action = [0.001, -1]
+                else:
+                    action = [0.1, -0.2]
+            elif mid_diff > thres:
+                # if mid_diff > 10:action = [0.001,1]
+                # else:action = [0.1,0.2]
+                if mid_diff > 10:
+                    action = [0.001, 1]
+                else:
+                    action = [0.1, 0.2]
+            else:
+                action = [1.0, 0.0]
+
+            # if (rule_obs[0][0]==255 and rule_obs[5][70]==255 and rule_obs[20][70]==255 and rule_obs[5][83]!=255):
+            if (rule_obs[0][0] == 255 and rule_obs[5][72] == 255 and rule_obs[20][72] == 255 and rule_obs[5][83] != 255 and rule_obs[25][83] != 255 and rule_obs[20][42]==255): 
+                # action = [0.00001,1] # 穩
+                # action = [0.0001,1] # 最穩
+                # action = [0.001,1] # 最高分可能
+                # action = [-0.001,1]
+                action = [-0.0001, 0.7]  # 最好
+                # print('turntunrturn')
+            # if flag == 0 or (flag == 1 and white_0>42): action = [0.0001,1]
+            if flag == 0 or (flag == 1 and white_0 > 42) or (rule_obs[5][0] == 255 and rule_obs[5][83] == 255):
+                # action = [0.0001,1] # 最穩 最高分可能
+                action = [0.001, 1] # 最好
+                
+        return np.array(action)

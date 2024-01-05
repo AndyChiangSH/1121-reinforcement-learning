@@ -143,7 +143,7 @@ class CarRacingEnvironment:
         obs = cv2.cvtColor(obs, cv2.COLOR_BGR2GRAY) # 96x96
         
         # resize image
-        # obs = cv2.resize(obs, (32, 32), interpolation=cv2.INTER_AREA)
+        obs = cv2.resize(obs, (84, 84), interpolation=cv2.INTER_AREA)
 
         # save image for debugging
         # filename = "images/image" + str(self.ep_len) + ".jpg"
