@@ -100,7 +100,7 @@ class CarRacingEnvironment:
         # reward += (info['lap'] + info['progress'] - 1) + info['time'] * 0.1
 
         # TD3-circle-5 reward
-        # reward = (info['lap'] - 1) + info['progress']
+        reward = (info['lap'] - 1) + info['progress']
 
         # TD3-circle-6 reward
         # reward = info['progress']

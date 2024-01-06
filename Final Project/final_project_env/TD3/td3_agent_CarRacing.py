@@ -176,6 +176,50 @@ class CarRacingTD3Agent(TD3BaseAgent):
             self.actor_opt.step()
 
 
+    def my_noise_1(self, state, action):
+        # print("state:", state.shape)
+        obs = state[0][3]
+        # print("obs:", obs.shape)
+
+        left_wall = 0
+        right_wall = 0
+        for i in range(len(obs)):
+            if obs[i][0] >= 140 and obs[i][0] <= 200:
+                left_wall += 1
+
+            if obs[i][-1] >= 140 and obs[i][-1] <= 200:
+                right_wall += 1
+
+        # print("left_wall:", left_wall)
+        # print("right_wall:", right_wall)
+
+        if self.scenario == "circle_cw_competition_collisionStop":
+            action = [1.0, 0.15]
+
+            if left_wall >= len(obs)*0.5:
+                action = [1.0, 0.3]
+                
+            if right_wall >= len(obs)*0.5:
+                action = [1.0, 0.0]
+        elif self.scenario == "austria_competition":
+            action = [0.2, 0.0]
+
+            if left_wall >= len(obs)*0.4:
+                action = [0.1, 0.75]
+            elif left_wall >= len(obs)*0.6:
+                action = [0.05, 1.0]
+
+            if right_wall >= len(obs)*0.4:
+                action = [0.1, -0.75]
+            elif right_wall >= len(obs)*0.6:
+                action = [0.05, -1.0]
+        
+        # demo not command
+        # time.sleep(0.05)
+
+        return np.array(action)
+
+
     def my_noise_2(self, state, action):
         # print("state:", state.shape)
         obs = state[0][3]
